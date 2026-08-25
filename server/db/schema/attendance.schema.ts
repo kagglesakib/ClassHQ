@@ -1,4 +1,4 @@
-import { Schema, model, models } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 /**
  * Unified Attendance & Single-Day Leave Schema
@@ -76,4 +76,4 @@ export const AttendanceSchema = new Schema(
 AttendanceSchema.index({ email: 1, date: 1 }, { unique: true });
 
 // Safe export pattern for Next.js App Router context
-export const Attendance = models.Attendance || model('Attendance', AttendanceSchema);
+export const Attendance = mongoose.models.Attendance || model('Attendance', AttendanceSchema);

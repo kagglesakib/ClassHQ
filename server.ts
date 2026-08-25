@@ -644,16 +644,43 @@ async function startServer() {
         );
       });
 
-      const existingRecords = await getAttendanceBySectionAndDate(batch, section, date);
+      const [existingRecords, sectionLeaves] = await Promise.all([
+        getAttendanceBySectionAndDate(batch, section, date),
+        getLeavesBySection(batch, section),
+      ]);
+
       const recordMap = new Map<string, AttendanceRecord>();
       existingRecords.forEach((r) => {
         if (r.studentId) recordMap.set(r.studentId, r);
         if (r.email) recordMap.set(r.email.toLowerCase(), r);
       });
 
+      const approvedLeaveMap = new Map<string, LeaveRequest>();
+      sectionLeaves.forEach((l) => {
+        if (l.status === 'Approved' && l.startDate <= date && l.endDate >= date) {
+          if (l.studentId) approvedLeaveMap.set(l.studentId, l);
+          if (l.studentEmail) approvedLeaveMap.set(l.studentEmail.toLowerCase(), l);
+        }
+      });
+
       const roster = sectionStudents.map((st) => {
         const rec = recordMap.get(st.id) || (st.email ? recordMap.get(st.email.toLowerCase()) : undefined);
-        const status = rec ? rec.status : 'present';
+        const approvedLeave = approvedLeaveMap.get(st.id) || (st.email ? approvedLeaveMap.get(st.email.toLowerCase()) : undefined);
+
+        let status: AttendanceStatus = 'present';
+        if (rec) {
+          status = rec.status;
+        } else if (approvedLeave) {
+          status = 'leave';
+        } else {
+          status = 'present';
+        }
+
+        const studentsNote = rec?.studentsNote || approvedLeave?.reason || approvedLeave?.studentsNote || '';
+        const captainsNote = rec?.captainsNote || rec?.remarks || approvedLeave?.captainsNote || approvedLeave?.reviewNote || '';
+        const leaveReason = approvedLeave?.reason || rec?.leaveReason || studentsNote;
+        const leaveStatus = approvedLeave ? 'Approved' : (rec?.leaveStatus || 'None');
+
         return {
           studentId: st.id,
           rollNumber: st.rollNumber,
@@ -664,9 +691,11 @@ async function startServer() {
           role: st.role,
           status,
           isMarked: Boolean(rec),
-          studentsNote: rec?.studentsNote || '',
-          captainsNote: rec?.captainsNote || rec?.remarks || '',
-          remarks: rec?.captainsNote || rec?.remarks || '',
+          studentsNote,
+          captainsNote,
+          remarks: captainsNote,
+          leaveReason,
+          leaveStatus,
         };
       });
 
@@ -711,6 +740,8 @@ async function startServer() {
 
         const captainsNote = r.captainsNote || r.remarks || '';
         const studentsNote = r.studentsNote || '';
+        const leaveReason = r.leaveReason || studentsNote;
+        const leaveStatus = status === 'leave' ? 'Approved' : 'None';
 
         return {
           id: `att-${date}-${student?.id || r.studentId}`,
@@ -719,12 +750,20 @@ async function startServer() {
           status,
           studentsNote,
           captainsNote,
+          leaveReason,
+          leaveStatus,
           studentId: student?.id || r.studentId,
           studentRoll: student?.rollNumber || r.rollNumber || 'N/A',
           studentName: student?.fullName || r.fullName || 'Student',
           batch: batch as HSCBatch,
           section: section as Section,
           group: student?.group || 'Science',
+          reviewedBy: {
+            id: req.user!.userId,
+            email: req.user!.email,
+            name: req.user!.fullName,
+            role: req.user!.role,
+          },
           markedBy: {
             id: req.user!.userId,
             name: req.user!.fullName,

@@ -201,6 +201,7 @@ export async function updateLeaveRequestStatus(
         item.status = 'absent';
       }
       item.reviewedBy = reviewedBy;
+      item.captainsNote = reviewNote || '';
       item.reviewNote = reviewNote || '';
       item.reviewedAt = now;
       matchedRecord = item;
@@ -212,8 +213,13 @@ export async function updateLeaveRequestStatus(
     try {
       const updateData: any = {
         leaveStatus: status,
-        reviewedBy,
-        reviewNote: reviewNote || '',
+        reviewedBy: {
+          id: reviewedBy.id || null,
+          email: (reviewedBy as any).email || null,
+          name: reviewedBy.name || null,
+          role: reviewedBy.role || null,
+        },
+        captainsNote: reviewNote || '',
         reviewedAt: now,
       };
       if (status === 'Approved') {

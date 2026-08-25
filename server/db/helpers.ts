@@ -92,9 +92,12 @@ export function formatAttendanceDoc(doc: any, user?: User | null): AttendanceRec
     status = 'absent';
   }
 
-  const captainsNote = doc.captainsNote || doc.remarks || '';
+  const captainsNote = doc.captainsNote || doc.remarks || doc.reviewNote || '';
   const studentsNote = doc.studentsNote || doc.studentNote || doc.leaveReason || doc.reason || '';
+  const leaveReason = doc.leaveReason || studentsNote;
+  const leaveStatus = doc.leaveStatus || (status === 'leave' ? 'Approved' : 'None');
   const email = (doc.email || doc.studentEmail || user?.email || '').trim().toLowerCase();
+  const reviewedBy = doc.reviewedBy || doc.markedBy || null;
 
   return {
     id: doc.id || (doc._id ? doc._id.toString() : `att-${doc.date}-${email || doc.studentId}`),
@@ -103,6 +106,11 @@ export function formatAttendanceDoc(doc: any, user?: User | null): AttendanceRec
     status,
     studentsNote,
     captainsNote,
+    leaveReason,
+    leaveStatus,
+    reviewedBy,
+    reviewedAt: doc.reviewedAt || null,
+    submittedAt: doc.submittedAt || null,
     // Relational hydration from foreign key (email)
     studentId: user?.id || doc.studentId || '',
     studentRoll: user?.rollNumber || doc.studentRoll || doc.rollNumber || '',
@@ -110,7 +118,7 @@ export function formatAttendanceDoc(doc: any, user?: User | null): AttendanceRec
     batch: (user?.batch || doc.batch || 'HSC 2026') as any,
     section: (user?.section || doc.section || 'A') as any,
     group: (user?.group || doc.group || 'Science') as any,
-    markedBy: doc.markedBy || { id: 'sys', name: 'Captain', role: 'captain' },
+    markedBy: reviewedBy || { id: 'sys', name: 'Captain', role: 'captain' },
     remarks: captainsNote,
     timestamp: doc.timestamp || new Date().toISOString(),
   };
@@ -133,6 +141,10 @@ export function formatLeaveDoc(doc: any, user?: User | null): LeaveRequest {
     resolvedStatus = 'Pending';
   }
 
+  const captainsNote = doc.captainsNote || doc.reviewNote || doc.remarks || '';
+  const reason = doc.leaveReason || doc.studentsNote || doc.reason || '';
+  const reviewedBy = doc.reviewedBy || doc.markedBy;
+
   return {
     id: doc.id || (doc._id ? doc._id.toString() : `leave-${email}-${date}`),
     // Relational hydration from foreign key (email)
@@ -148,10 +160,13 @@ export function formatLeaveDoc(doc: any, user?: User | null): LeaveRequest {
     startDate: date,
     endDate: date,
     daysCount: 1, // Single day leave constraint
-    reason: doc.leaveReason || doc.reason || doc.studentsNote || '',
+    reason,
+    leaveReason: reason,
+    studentsNote: doc.studentsNote || reason,
+    captainsNote,
+    reviewNote: captainsNote,
     status: resolvedStatus,
-    reviewedBy: doc.reviewedBy,
-    reviewNote: doc.reviewNote || '',
+    reviewedBy,
     reviewedAt: doc.reviewedAt,
     submittedAt: doc.submittedAt || doc.timestamp || new Date().toISOString(),
   };

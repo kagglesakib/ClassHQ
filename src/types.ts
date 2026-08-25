@@ -70,12 +70,22 @@ export interface AttendanceRecord {
   status: AttendanceStatus;
   studentsNote?: string;
   captainsNote?: string;
+  leaveReason?: string;
+  leaveStatus?: LeaveStatus | 'None';
   studentId?: string;
   studentRoll?: string;
   studentName?: string;
   batch?: HSCBatch;
   section?: Section;
   group?: AcademicGroup;
+  reviewedBy?: {
+    id: string;
+    email?: string;
+    name: string;
+    role: UserRole;
+  };
+  reviewedAt?: string;
+  submittedAt?: string;
   markedBy?: {
     id: string;
     name: string;
@@ -100,9 +110,13 @@ export interface LeaveRequest {
   endDate: string; // YYYY-MM-DD
   daysCount: number;
   reason: string;
+  leaveReason?: string;
+  studentsNote?: string;
+  captainsNote?: string;
   status: LeaveStatus;
   reviewedBy?: {
     id: string;
+    email?: string;
     name: string;
     role: UserRole;
   };

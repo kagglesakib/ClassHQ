@@ -138,7 +138,21 @@ export async function saveOrUpdateAttendanceRecords(records: AttendanceRecord[])
           status: formatted.status,
           studentsNote: formatted.studentsNote || '',
           captainsNote: formatted.captainsNote || formatted.remarks || '',
-          markedBy: formatted.markedBy,
+          leaveReason: formatted.leaveReason || '',
+          leaveStatus: formatted.leaveStatus || 'None',
+          reviewedBy: formatted.reviewedBy ? {
+            id: formatted.reviewedBy.id || null,
+            email: formatted.reviewedBy.email || null,
+            name: formatted.reviewedBy.name || null,
+            role: formatted.reviewedBy.role || null,
+          } : (formatted.markedBy ? {
+            id: formatted.markedBy.id || null,
+            email: null,
+            name: formatted.markedBy.name || null,
+            role: formatted.markedBy.role || null,
+          } : null),
+          reviewedAt: formatted.reviewedAt || null,
+          submittedAt: formatted.submittedAt || null,
           timestamp: formatted.timestamp || new Date().toISOString(),
         };
 
