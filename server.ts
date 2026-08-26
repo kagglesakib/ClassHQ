@@ -9,6 +9,8 @@ import { createServer as createViteServer } from 'vite';
 import {
   initMongoDB,
   getDatabaseStatus,
+  isMongoConnected,
+  isConnecting,
   findUserByEmail,
   findUserByRoll,
   findUserById,
@@ -58,20 +60,26 @@ import {
 
 dotenv.config();
 
-async function startServer() {
-  const app = express();
-  const PORT = 3000;
+export const app = express();
 
-  // Initialize MongoDB lazily/in background
-  initMongoDB().catch((err) => console.error('[ClassHQ] MongoDB init error:', err));
+// Initialize MongoDB lazily/in background
+initMongoDB().catch((err) => console.error('[ClassHQ] MongoDB init error:', err));
 
-  app.use(cors({
-    origin: true,
-    credentials: true,
-  }));
-  app.use(cookieParser());
-  app.use(express.json());
-  app.use(authMiddleware);
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
+app.use(cookieParser());
+app.use(express.json());
+app.use(authMiddleware);
+
+// Middleware to ensure DB connection on serverless cold starts
+app.use(async (req, res, next) => {
+  if (!isMongoConnected && !isConnecting) {
+    initMongoDB().catch((err) => console.error('[ClassHQ] MongoDB init error:', err));
+  }
+  next();
+});
 
   // ------------------------------------
   // System & Health Endpoints
@@ -1737,28 +1745,35 @@ async function startServer() {
   // ------------------------------------
   // Vite Middleware & SPA Fallback
   // ------------------------------------
-  const httpServer = http.createServer(app);
+  export async function startServer() {
+    const PORT = 3000;
+    const httpServer = http.createServer(app);
 
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { 
-        middlewareMode: true,
-        hmr: { server: httpServer }
-      },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+    if (process.env.NODE_ENV !== 'production') {
+      const vite = await createViteServer({
+        server: { 
+          middlewareMode: true,
+          hmr: { server: httpServer }
+        },
+        appType: 'spa',
+      });
+      app.use(vite.middlewares);
+    } else {
+      const distPath = path.join(process.cwd(), 'dist');
+      app.use(express.static(distPath));
+      app.get('*', (req, res) => {
+        res.sendFile(path.join(distPath, 'index.html'));
+      });
+    }
+
+    httpServer.listen(PORT, '0.0.0.0', () => {
+      console.log(`[ClassHQ Server] Running on http://localhost:${PORT}`);
     });
   }
 
-  httpServer.listen(PORT, '0.0.0.0', () => {
-    console.log(`[ClassHQ Server] Running on http://localhost:${PORT}`);
-  });
-}
+  // Only start the standalone HTTP listener when not in a serverless environment like Vercel
+  if (!process.env.VERCEL) {
+    startServer();
+  }
 
-startServer();
+  export default app;
