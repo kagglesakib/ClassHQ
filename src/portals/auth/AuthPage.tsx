@@ -21,14 +21,15 @@ import {
   Phone,
   MapPin,
   BookOpen,
-  Award,
-  KeyRound,
   Eye,
   EyeOff,
   BadgeCheck,
   Flame,
-  HeartHandshake,
-  Compass
+  Award,
+  KeyRound,
+  Compass,
+  Zap,
+  Check
 } from 'lucide-react';
 import { HSCBatch, Section, AcademicGroup, Gender } from '../../types';
 
@@ -201,170 +202,173 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50/90 via-purple-50/70 to-rose-50/90 text-slate-900 flex flex-col justify-center py-6 px-3 sm:px-6 lg:px-8 relative overflow-x-hidden">
-      {/* Decorative Floating Pastel Blobs */}
-      <div className="absolute top-[-8%] left-[-8%] w-72 sm:w-96 h-72 sm:h-96 bg-purple-200/40 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-[-8%] right-[-8%] w-72 sm:w-96 h-72 sm:h-96 bg-rose-200/40 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-[35%] right-[5%] w-64 sm:w-80 h-64 sm:h-80 bg-sky-200/30 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100 flex flex-col justify-center py-3 px-2 sm:px-6 lg:px-8 relative overflow-x-hidden select-none">
+      {/* Dynamic Background Glowing Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-indigo-600/35 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-600/35 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[40%] right-[15%] w-80 h-80 bg-rose-600/25 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-[20%] left-[20%] w-72 h-72 bg-emerald-600/20 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="w-full max-w-xl mx-auto relative z-10 space-y-4 sm:space-y-6">
-        {/* Aesthetic Header */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center p-3 sm:p-3.5 rounded-3xl bg-white/90 shadow-md border border-indigo-100/90 text-indigo-600 gap-2 sm:gap-2.5">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white flex items-center justify-center shadow-xs">
-              <School className="w-5 h-5 sm:w-6 sm:h-6" />
+      <div className="w-full max-w-xl mx-auto relative z-10 space-y-3">
+        {/* Aesthetic Header Banner with Element-wise Color Cards */}
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 border border-indigo-400/30 backdrop-blur-md shadow-md">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center shadow-xs">
+              <School className="w-3.5 h-3.5" />
             </div>
-            <span className="text-lg sm:text-xl">✨ 🏫 ✨</span>
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-200">
+              Bangladesh Navy College, Chittagong
+            </span>
           </div>
 
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-purple-900 to-rose-900">
-              ClassHQ Portal 🎓
+          <div className="space-y-0.5">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-purple-200 to-rose-200 drop-shadow-xs">
+              ClassHQ Portal
             </h1>
-            <p className="text-xs sm:text-sm font-bold text-slate-600 max-w-md mx-auto flex items-center justify-center gap-1.5 flex-wrap px-2">
-              <span>Academic Attendance & Governance System</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-rose-100 text-rose-700 font-black border border-rose-200 shadow-2xs">
-                ⚡ 2026 Edition
+            <p className="text-[11px] sm:text-xs font-semibold text-slate-300 max-w-md mx-auto flex items-center justify-center gap-1.5 flex-wrap px-1">
+              <span className="text-indigo-300">Attendance & Academic Operations</span>
+              <span className="px-2 py-0.2 rounded-full text-[9px] bg-gradient-to-r from-rose-500 to-pink-500 text-white font-extrabold shadow-xs">
+                2026 Edition ⚡
               </span>
             </p>
           </div>
 
-          {/* Role Avatars Preview & Demo Login Bar */}
-          <div className="flex flex-col items-center gap-2 pt-1">
-            <div className="text-[10px] font-black uppercase tracking-widest text-indigo-900/60 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-amber-500" />
-              <span>Tap to Quick-Fill Demo Credentials:</span>
+          {/* Role Avatars & Quick Demo Buttons with Rich Colored Backgrounds */}
+          <div className="p-2 sm:p-3 rounded-2xl bg-slate-800/80 border border-slate-700/80 backdrop-blur-md shadow-lg space-y-1.5">
+            <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-indigo-300 flex items-center justify-center gap-1">
+              <Zap className="w-3 h-3 text-amber-400 fill-amber-400" />
+              <span>Quick Demo Autofill Credentials:</span>
             </div>
-            <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+            <div className="grid grid-cols-3 gap-1.5">
               <button
                 type="button"
                 onClick={() => handleQuickDemoFill('student')}
-                className="px-2.5 py-1.5 rounded-xl bg-indigo-100/90 hover:bg-indigo-200 border border-indigo-200 text-indigo-900 text-[11px] font-extrabold flex items-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                title="Fill Student Credentials"
+                className="group relative p-1.5 sm:p-2 rounded-xl bg-gradient-to-br from-indigo-600/90 to-blue-700/90 hover:from-indigo-500 hover:to-blue-600 border border-indigo-400/40 text-white text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 shadow-sm transition-all active:scale-95 cursor-pointer"
               >
-                <span className="text-xs">👨‍🎓</span>
-                <span>Student</span>
+                <div className="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                  👨‍🎓
+                </div>
+                <span className="text-[10px] font-extrabold tracking-wide">Student</span>
+                <span className="text-[8px] sm:text-[9px] text-indigo-200 font-medium opacity-90">Roll: 260102</span>
               </button>
+
               <button
                 type="button"
                 onClick={() => handleQuickDemoFill('captain')}
-                className="px-2.5 py-1.5 rounded-xl bg-amber-100/90 hover:bg-amber-200 border border-amber-200 text-amber-900 text-[11px] font-extrabold flex items-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                title="Fill Captain Credentials"
+                className="group relative p-1.5 sm:p-2 rounded-xl bg-gradient-to-br from-amber-600/90 to-orange-700/90 hover:from-amber-500 hover:to-orange-600 border border-amber-400/40 text-white text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 shadow-sm transition-all active:scale-95 cursor-pointer"
               >
-                <span className="text-xs">🎖️</span>
-                <span>Captain</span>
+                <div className="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                  🎖️
+                </div>
+                <span className="text-[10px] font-extrabold tracking-wide">Captain</span>
+                <span className="text-[8px] sm:text-[9px] text-amber-200 font-medium opacity-90">Roll: 260101</span>
               </button>
+
               <button
                 type="button"
                 onClick={() => handleQuickDemoFill('admin')}
-                className="px-2.5 py-1.5 rounded-xl bg-rose-100/90 hover:bg-rose-200 border border-rose-200 text-rose-900 text-[11px] font-extrabold flex items-center gap-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
-                title="Fill Admin Credentials"
+                className="group relative p-1.5 sm:p-2 rounded-xl bg-gradient-to-br from-rose-600/90 to-crimson-700/90 hover:from-rose-500 hover:to-pink-600 border border-rose-400/40 text-white text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 shadow-sm transition-all active:scale-95 cursor-pointer"
               >
-                <span className="text-xs">👑</span>
-                <span>Admin</span>
+                <div className="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                  👑
+                </div>
+                <span className="text-[10px] font-extrabold tracking-wide">Admin</span>
+                <span className="text-[8px] sm:text-[9px] text-rose-200 font-medium opacity-90">admin@hq</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Pending Notice Callout if Any */}
+        {/* Pending Approval Notice Banner */}
         {pendingNotice && (
-          <div className="mb-6 p-5 sm:p-6 rounded-3xl bg-amber-50/95 border-2 border-amber-300 shadow-lg space-y-4 animate-in fade-in slide-in-from-top-3 duration-300">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-200 text-amber-900 border border-amber-300">
-                  <Clock className="w-3.5 h-3.5 text-amber-700 animate-spin" />
-                  ⏳ Approval In Progress
+          <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-amber-500/20 via-amber-600/15 to-orange-600/20 border border-amber-400/40 backdrop-blur-xl shadow-lg space-y-2 animate-in fade-in slide-in-from-top-3 duration-300">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-amber-400 text-amber-950 shadow-xs">
+                  <Clock className="w-3 h-3 text-amber-950 animate-spin" />
+                  Approval In Progress
                 </span>
               </div>
               <button
                 type="button"
                 onClick={clearPendingNotice}
-                className="p-1 rounded-full text-amber-700 hover:text-amber-950 hover:bg-amber-200/70 transition-colors cursor-pointer"
+                className="p-1 rounded-full text-amber-300 hover:text-white hover:bg-amber-500/30 transition-colors cursor-pointer"
                 title="Dismiss Notice"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
             <div>
-              <h3 className="text-sm font-black text-amber-950 flex items-center gap-2">
-                <span>📣 Student Account Awaiting Verification</span>
+              <h3 className="text-xs font-bold text-amber-100 flex items-center gap-1.5">
+                <span>Student Account Awaiting Verification</span>
               </h3>
-              <p className="text-xs font-semibold text-amber-800/90 mt-1 leading-relaxed">
+              <p className="text-[10px] font-medium text-amber-200/90 mt-0.5 leading-snug">
                 {pendingNotice.message ||
                   'Your student profile registration has been submitted and is currently awaiting verification by your assigned Class Captain or Academic Administrator.'}
               </p>
             </div>
 
             {pendingNotice.user && (
-              <div className="p-3.5 rounded-2xl bg-white/95 border-2 border-amber-200 text-xs text-amber-950 space-y-2 shadow-xs">
-                <div className="flex items-center justify-between border-b border-amber-100 pb-2">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-400 text-white flex items-center justify-center font-black text-xs shadow-2xs">
+              <div className="p-2.5 rounded-xl bg-slate-900/90 border border-amber-400/30 text-[11px] text-slate-200 space-y-1.5 shadow-inner">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center font-bold text-xs shadow-xs">
                       {pendingNotice.user.fullName ? pendingNotice.user.fullName.charAt(0).toUpperCase() : '👤'}
                     </div>
                     <div>
-                      <div className="font-black text-slate-900 flex items-center gap-1">
+                      <div className="font-bold text-white flex items-center gap-1 text-[11px]">
                         <span>{pendingNotice.user.fullName || 'Student'}</span>
-                        <span>🎓</span>
                       </div>
                       {pendingNotice.user.email && (
-                        <div className="text-[11px] text-slate-500 flex items-center gap-1">
-                          <Mail className="w-3 h-3 text-amber-600" />
+                        <div className="text-[10px] text-slate-400 flex items-center gap-1">
+                          <Mail className="w-2.5 h-2.5 text-amber-400" />
                           <span>{pendingNotice.user.email}</span>
                         </div>
                       )}
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="inline-block px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 font-mono font-black text-xs border border-amber-200">
-                      🏷️ Roll: {pendingNotice.user.rollNumber || 'N/A'}
+                    <span className="inline-block px-2 py-0.5 rounded-lg bg-amber-400/20 text-amber-300 font-mono font-bold text-[10px] border border-amber-400/30">
+                      Roll: {pendingNotice.user.rollNumber || 'N/A'}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] font-bold text-amber-900 pt-0.5">
-                  <span className="flex items-center gap-1 text-slate-600">
-                    <Users className="w-3.5 h-3.5 text-amber-700" />
-                    Cohort Assignment:
+                <div className="flex items-center justify-between text-[10px] font-bold text-slate-300 pt-0.5">
+                  <span className="flex items-center gap-1 text-slate-400">
+                    <Users className="w-3 h-3 text-amber-400" />
+                    Cohort:
                   </span>
-                  <span className="font-extrabold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100">
+                  <span className="font-extrabold text-indigo-300 bg-indigo-500/20 px-1.5 py-0.2 rounded border border-indigo-400/30">
                     {pendingNotice.user.batch || 'Batch'} • Sec {pendingNotice.user.section || 'A'}
                   </span>
                 </div>
               </div>
             )}
 
-            {/* Helpful Guidance */}
-            <div className="p-3 rounded-2xl bg-amber-100/70 border border-amber-300 text-[11px] text-amber-950 space-y-1">
-              <div className="flex items-start gap-2 font-medium">
-                <UserCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Who approves this?</strong> Your section's <strong>🎖️ Class Captain</strong> or an <strong>👑 Administrator</strong> can verify your profile instantly.
-                </span>
+            <div className="flex items-center justify-between gap-2 pt-0.5">
+              <div className="text-[10px] font-medium text-amber-200/80 flex items-center gap-1">
+                <UserCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>Captain or Admin approval required</span>
               </div>
-            </div>
-
-            {/* Quick Action Button */}
-            <div className="flex items-center justify-end gap-2 pt-1">
               <button
                 type="button"
                 onClick={handleRecheckStatus}
                 disabled={isRechecking || loginSubmitting}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 hover:from-amber-700 hover:to-orange-800 text-white text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 text-[10px] font-extrabold transition-all shadow-xs active:scale-95 disabled:opacity-50 cursor-pointer"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isRechecking || loginSubmitting ? 'animate-spin' : ''}`} />
-                <span>{isRechecking || loginSubmitting ? 'Checking Status...' : '🔄 Re-check Approval Status'}</span>
+                <RefreshCw className={`w-3 h-3 ${isRechecking || loginSubmitting ? 'animate-spin' : ''}`} />
+                <span>{isRechecking || loginSubmitting ? 'Checking...' : 'Re-check'}</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* Main Aesthetic Card */}
-        <div className="bg-white/90 backdrop-blur-xl rounded-3xl border-2 border-indigo-100 shadow-xl overflow-hidden">
-          {/* Aesthetic Segmented Tab Switcher with Background Colors */}
-          <div className="grid grid-cols-2 p-1.5 bg-gradient-to-r from-indigo-50 via-purple-50 to-rose-50 border-b-2 border-indigo-100 gap-1.5">
+        {/* Main Aesthetic Card with Radical Element-wise Background Coloring */}
+        <div className="bg-slate-900/90 backdrop-blur-2xl rounded-2xl border border-indigo-500/30 shadow-xl overflow-hidden">
+          {/* Aesthetic Segmented Tab Switcher with Vibrant Dual Themes */}
+          <div className="grid grid-cols-2 p-1 bg-slate-950/80 border-b border-indigo-500/20 gap-1">
             <button
               id="tab-btn-signin"
               type="button"
@@ -372,14 +376,14 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                 setActiveTab('login');
                 setLoginError(null);
               }}
-              className={`py-3.5 text-xs font-black uppercase tracking-wider rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+              className={`py-2 text-[11px] font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeTab === 'login'
-                  ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white shadow-md scale-[1.01]'
-                  : 'text-indigo-900 hover:bg-white/70 hover:text-indigo-950 font-bold'
+                  ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white shadow-md shadow-indigo-600/30'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-bold'
               }`}
             >
-              <span className="text-base">🔑</span>
-              <span>Sign In to Portal</span>
+              <KeyRound className="w-3.5 h-3.5 text-indigo-300" />
+              <span>Sign In</span>
             </button>
             <button
               id="tab-btn-register"
@@ -388,54 +392,59 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                 setActiveTab('register');
                 setRegisterError(null);
               }}
-              className={`py-3.5 text-xs font-black uppercase tracking-wider rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+              className={`py-2 text-[11px] font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeTab === 'register'
-                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md scale-[1.01]'
-                  : 'text-emerald-900 hover:bg-white/70 hover:text-emerald-950 font-bold'
+                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md shadow-emerald-600/30'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60 font-bold'
               }`}
             >
-              <span className="text-base">📝</span>
-              <span>Student Onboarding</span>
+              <GraduationCap className="w-3.5 h-3.5 text-emerald-300" />
+              <span>Register</span>
             </button>
           </div>
 
-          <div className="p-6 sm:p-8">
+          <div className="p-3.5 sm:p-5">
             {activeTab === 'login' ? (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {/* Login Header Tag */}
-                <div className="p-3.5 rounded-2xl bg-indigo-50/80 border border-indigo-100 flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
-                    <ShieldCheck className="w-5 h-5" />
+                <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-indigo-900/60 via-purple-900/40 to-slate-900 border border-indigo-500/30 flex items-center gap-2.5 shadow-xs">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
+                    <ShieldCheck className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-black text-indigo-950 flex items-center gap-1.5">
+                    <h3 className="text-xs font-bold text-white flex items-center gap-1">
                       <span>Welcome Back!</span>
                       <span>👋</span>
                     </h3>
-                    <p className="text-[11px] font-semibold text-indigo-700">
-                      Sign in with your Roll Number or Registered Email
+                    <p className="text-[10px] font-medium text-indigo-200/80">
+                      Sign in with your Roll Number or Email
                     </p>
                   </div>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-2.5">
                   {loginError && (
-                    <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2.5 animate-shake">
-                      <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+                    <div className="p-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 text-[11px] font-bold flex items-center gap-2 animate-shake shadow-sm">
+                      <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                       <span>{loginError}</span>
                     </div>
                   )}
 
-                  {/* Roll Number or Email Input with Pastel Styling */}
-                  <div className="p-3 rounded-2xl bg-indigo-50/50 border border-indigo-100 space-y-1.5 transition-all focus-within:bg-indigo-50 focus-within:border-indigo-300">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-indigo-900 flex items-center gap-1.5">
-                      <span className="text-xs">🔢</span>
-                      <span>Roll Number or Institutional Email</span>
+                  {/* Roll Number or Email Field - Indigo Themed Container */}
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-indigo-950/70 border border-indigo-500/40 space-y-1 transition-all focus-within:bg-indigo-900/60 focus-within:border-indigo-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-indigo-300 flex items-center justify-between">
+                      <span className="flex items-center gap-1">
+                        <Hash className="w-3 h-3 text-indigo-400" />
+                        <span>Roll Number or Email</span>
+                      </span>
+                      <span className="px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 text-[8px] font-bold border border-indigo-400/30">
+                        Required
+                      </span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <div className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                          <Hash className="w-3.5 h-3.5" />
+                      <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                        <div className="w-5 h-5 rounded bg-indigo-600/30 text-indigo-300 flex items-center justify-center border border-indigo-500/30">
+                          <User className="w-3 h-3" />
                         </div>
                       </div>
                       <input
@@ -445,21 +454,26 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                         value={loginIdentifier}
                         onChange={(e) => setLoginIdentifier(e.target.value)}
                         required
-                        className="w-full pl-11 pr-3.5 py-2.5 text-xs font-bold text-slate-900 bg-white border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all shadow-2xs"
+                        className="w-full pl-9 pr-3 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-indigo-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-indigo-400 transition-all placeholder:text-slate-500 shadow-inner"
                       />
                     </div>
                   </div>
 
-                  {/* Password Input with Toggle */}
-                  <div className="p-3 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-1.5 transition-all focus-within:bg-purple-50 focus-within:border-purple-300">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-purple-900 flex items-center gap-1.5">
-                      <span className="text-xs">🔒</span>
-                      <span>Account Password</span>
+                  {/* Password Field - Purple Themed Container */}
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-purple-950/70 border border-purple-500/40 space-y-1 transition-all focus-within:bg-purple-900/60 focus-within:border-purple-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-purple-300 flex items-center justify-between">
+                      <span className="flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-purple-400" />
+                        <span>Account Password</span>
+                      </span>
+                      <span className="px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 text-[8px] font-bold border border-purple-400/30">
+                        Encrypted
+                      </span>
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <div className="w-6 h-6 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
-                          <Lock className="w-3.5 h-3.5" />
+                      <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                        <div className="w-5 h-5 rounded bg-purple-600/30 text-purple-300 flex items-center justify-center border border-purple-500/30">
+                          <Lock className="w-3 h-3" />
                         </div>
                       </div>
                       <input
@@ -469,45 +483,44 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
                         required
-                        className="w-full pl-11 pr-10 py-2.5 text-xs font-bold text-slate-900 bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all shadow-2xs"
+                        className="w-full pl-9 pr-9 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-purple-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-purple-400 transition-all placeholder:text-slate-500 shadow-inner"
                       />
                       <button
                         type="button"
                         onClick={() => setShowLoginPassword(!showLoginPassword)}
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-purple-400 hover:text-purple-700 cursor-pointer"
+                        className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-purple-400 hover:text-purple-200 cursor-pointer transition-colors"
                       >
-                        {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showLoginPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   </div>
 
-                  {/* Vibrant Action Button */}
+                  {/* Radiant Sign In Button */}
                   <button
                     id="btn-submit-login"
                     type="submit"
                     disabled={loginSubmitting}
-                    className="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 hover:from-indigo-700 hover:to-purple-800 text-white text-xs font-black uppercase tracking-wider rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-2.5 bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-600 hover:from-indigo-600 hover:to-purple-700 text-white text-[11px] font-extrabold uppercase tracking-wider rounded-xl transition-all shadow-md shadow-indigo-600/25 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer mt-1"
                   >
-                    <Sparkles className="w-4 h-4 text-yellow-300" />
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
                     <span>{loginSubmitting ? 'Authenticating...' : 'Sign In to Portal'}</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </form>
 
-                {/* Student Registration Prompt Card */}
-                <div className="pt-4 border-t border-indigo-100">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-rose-50 to-pink-50 border border-amber-200 flex items-center justify-between gap-3 shadow-2xs">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-rose-400 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
-                        <GraduationCap className="w-5 h-5" />
+                {/* Student Registration Onboarding Banner */}
+                <div className="pt-2 border-t border-slate-800">
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-r from-emerald-950/60 via-teal-950/40 to-slate-900 border border-emerald-500/30 flex items-center justify-between gap-2 shadow-xs">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
+                        <GraduationCap className="w-3.5 h-3.5" />
                       </div>
                       <div>
-                        <h4 className="text-xs font-black text-slate-900 flex items-center gap-1">
+                        <h4 className="text-[11px] font-bold text-white flex items-center gap-1">
                           <span>New Student?</span>
-                          <span>🎓</span>
                         </h4>
-                        <p className="text-[10px] font-bold text-slate-600">
-                          Register your academic profile to request attendance access
+                        <p className="text-[9px] font-medium text-emerald-200/80">
+                          Register profile for Captain approval
                         </p>
                       </div>
                     </div>
@@ -515,151 +528,149 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                       id="btn-switch-to-register"
                       type="button"
                       onClick={() => setActiveTab('register')}
-                      className="text-[10px] font-black uppercase tracking-wider text-rose-700 bg-white px-3.5 py-2.5 rounded-xl border border-rose-200 hover:bg-rose-50 transition-all shrink-0 shadow-xs cursor-pointer flex items-center gap-1 active:scale-95"
+                      className="text-[9px] font-extrabold uppercase tracking-wider text-emerald-950 bg-emerald-400 px-2.5 py-1.5 rounded-lg border border-emerald-300 hover:bg-emerald-300 transition-all shrink-0 shadow-xs cursor-pointer flex items-center gap-1 active:scale-95"
                     >
                       <span>Register</span>
-                      <span>✨</span>
                     </button>
                   </div>
                 </div>
               </div>
             ) : (
-              /* Student Registration Form with Aesthetic Colors */
-              <form onSubmit={handleRegister} className="space-y-4">
-                {/* Header Badge */}
-                <div className="p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-100 flex items-center gap-3 mb-2">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
-                    <BookOpen className="w-5 h-5" />
+              /* Student Onboarding Registration Form with Element-wise Colors */
+              <form onSubmit={handleRegister} className="space-y-2.5">
+                {/* Registration Header Tag */}
+                <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-950/60 via-teal-950/40 to-slate-900 border border-emerald-500/30 flex items-center gap-2.5 shadow-xs">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
+                    <BookOpen className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-black text-emerald-950 flex items-center gap-1.5">
-                      <span>Student Profile Registration</span>
-                      <span>🚀</span>
+                    <h3 className="text-xs font-bold text-white flex items-center gap-1">
+                      <span>Student Onboarding Registration</span>
                     </h3>
-                    <p className="text-[11px] font-semibold text-emerald-700">
-                      Fill in your exact institutional details for Captain approval
+                    <p className="text-[10px] font-medium text-emerald-200/80">
+                      Fill in exact institutional details for Captain approval
                     </p>
                   </div>
                 </div>
 
                 {registerError && (
-                  <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-200 text-rose-800 text-xs font-bold flex items-center gap-2.5 animate-shake">
-                    <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+                  <div className="p-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 text-[11px] font-bold flex items-center gap-2 animate-shake shadow-sm">
+                    <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
                     <span>{registerError}</span>
                   </div>
                 )}
 
                 {registerSuccess && (
-                  <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2.5">
-                    <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 text-[11px] font-bold flex items-center gap-2 shadow-sm">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>{registerSuccess}</span>
                   </div>
                 )}
 
-                {/* Name & Roll Number */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-3 rounded-2xl bg-indigo-50/50 border border-indigo-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-indigo-900 flex items-center gap-1">
-                      <span>👤</span>
-                      <span>Full Legal Name:</span>
+                {/* Name & Roll Number - Dual Distinct Color Boxes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {/* Full Legal Name - Blue Theme */}
+                  <div className="p-2 rounded-xl bg-sky-950/60 border border-sky-500/40 space-y-1 transition-all focus-within:bg-sky-900/60 focus-within:border-sky-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-sky-300 flex items-center gap-1">
+                      <User className="w-3 h-3 text-sky-400" />
+                      <span>Full Name:</span>
                     </label>
                     <div className="relative">
-                      <User className="w-4 h-4 text-indigo-400 absolute left-3 top-2.5" />
                       <input
                         type="text"
                         placeholder="e.g. Shakib Al Hasan"
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         required
-                        className="w-full pl-9 pr-3 py-2 text-xs font-bold bg-white border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                        className="w-full px-2.5 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-sky-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-sky-400 placeholder:text-slate-500 shadow-inner"
                       />
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-purple-900 flex items-center gap-1">
-                      <span>🔢</span>
+                  {/* Roll Number - Violet Theme */}
+                  <div className="p-2 rounded-xl bg-violet-950/60 border border-violet-500/40 space-y-1 transition-all focus-within:bg-violet-900/60 focus-within:border-violet-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-violet-300 flex items-center gap-1">
+                      <Hash className="w-3 h-3 text-violet-400" />
                       <span>Roll Number (6 Digits):</span>
                     </label>
                     <div className="relative">
-                      <Hash className="w-4 h-4 text-purple-400 absolute left-3 top-2.5" />
                       <input
                         type="text"
                         placeholder="e.g. 260120"
                         value={formData.rollNumber}
                         onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
                         required
-                        className="w-full pl-9 pr-3 py-2 text-xs font-mono font-bold bg-white border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-300"
+                        className="w-full px-2.5 py-1.5 text-[11px] font-mono font-bold text-white bg-slate-900/90 border border-violet-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-violet-400 placeholder:text-slate-500 shadow-inner"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Email & Phone */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-3 rounded-2xl bg-sky-50/50 border border-sky-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-sky-900 flex items-center gap-1">
-                      <span>📧</span>
-                      <span>Institutional Email:</span>
+                {/* Email & Phone - Cyan & Emerald Boxes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {/* Institutional Email - Cyan Theme */}
+                  <div className="p-2 rounded-xl bg-cyan-950/60 border border-cyan-500/40 space-y-1 transition-all focus-within:bg-cyan-900/60 focus-within:border-cyan-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1">
+                      <Mail className="w-3 h-3 text-cyan-400" />
+                      <span>Email:</span>
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-sky-400 absolute left-3 top-2.5" />
                       <input
                         type="email"
                         placeholder="student@college.edu"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
-                        className="w-full pl-9 pr-3 py-2 text-xs font-bold bg-white border border-sky-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-300"
+                        className="w-full px-2.5 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-cyan-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-cyan-400 placeholder:text-slate-500 shadow-inner"
                       />
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-emerald-900 flex items-center gap-1">
-                      <span>📱</span>
+                  {/* Contact Phone - Mint Theme */}
+                  <div className="p-2 rounded-xl bg-emerald-950/60 border border-emerald-500/40 space-y-1 transition-all focus-within:bg-emerald-900/60 focus-within:border-emerald-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1">
+                      <Phone className="w-3 h-3 text-emerald-400" />
                       <span>Contact Phone:</span>
                     </label>
                     <div className="relative">
-                      <Phone className="w-4 h-4 text-emerald-400 absolute left-3 top-2.5" />
                       <input
                         type="text"
                         placeholder="+880 1700-000000"
                         value={formData.phoneNumber}
                         onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                         required
-                        className="w-full pl-9 pr-3 py-2 text-xs font-bold bg-white border border-emerald-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300"
+                        className="w-full px-2.5 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-emerald-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-emerald-400 placeholder:text-slate-500 shadow-inner"
                       />
                     </div>
                   </div>
                 </div>
 
-                {/* Academic Selectors Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  <div className="p-2.5 rounded-2xl bg-amber-50/60 border border-amber-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-amber-900 flex items-center gap-1">
-                      <span>⚧️</span>
+                {/* Academic Selectors Grid with Individual Distinct Background Colors */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                  {/* Gender Selector - Amber Container */}
+                  <div className="p-1.5 rounded-xl bg-amber-950/60 border border-amber-500/40 space-y-0.5">
+                    <label className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-amber-300 flex items-center gap-0.5">
                       <span>Gender</span>
                     </label>
                     <select
                       value={formData.gender}
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value as Gender })}
-                      className="w-full px-2 py-1.5 text-xs font-bold bg-white border border-amber-200 rounded-xl focus:outline-none"
+                      className="w-full px-1.5 py-1 text-[11px] font-bold text-white bg-slate-900/90 border border-amber-500/30 rounded-lg focus:outline-hidden cursor-pointer"
                     >
-                      <option value="Male">👦 Male</option>
-                      <option value="Female">👧 Female</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
                     </select>
                   </div>
 
-                  <div className="p-2.5 rounded-2xl bg-rose-50/60 border border-rose-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-rose-900 flex items-center gap-1">
-                      <span>🎓</span>
-                      <span>HSC Batch</span>
+                  {/* HSC Batch Selector - Rose Container */}
+                  <div className="p-1.5 rounded-xl bg-rose-950/60 border border-rose-500/40 space-y-0.5">
+                    <label className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-rose-300 flex items-center gap-0.5">
+                      <span>Batch</span>
                     </label>
                     <select
                       value={formData.batch}
                       onChange={(e) => setFormData({ ...formData, batch: e.target.value as HSCBatch })}
-                      className="w-full px-2 py-1.5 text-xs font-bold bg-white border border-rose-200 rounded-xl focus:outline-none"
+                      className="w-full px-1.5 py-1 text-[11px] font-bold text-white bg-slate-900/90 border border-rose-500/30 rounded-lg focus:outline-hidden cursor-pointer"
                     >
                       {batches.map((b) => (
                         <option key={b} value={b}>
@@ -669,15 +680,15 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                     </select>
                   </div>
 
-                  <div className="p-2.5 rounded-2xl bg-violet-50/60 border border-violet-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-violet-900 flex items-center gap-1">
-                      <span>📚</span>
-                      <span>Academic Group</span>
+                  {/* Academic Group Selector - Fuchsia Container */}
+                  <div className="p-1.5 rounded-xl bg-fuchsia-950/60 border border-fuchsia-500/40 space-y-0.5">
+                    <label className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-fuchsia-300 flex items-center gap-0.5">
+                      <span>Group</span>
                     </label>
                     <select
                       value={formData.group}
                       onChange={(e) => setFormData({ ...formData, group: e.target.value as AcademicGroup })}
-                      className="w-full px-2 py-1.5 text-xs font-bold bg-white border border-violet-200 rounded-xl focus:outline-none"
+                      className="w-full px-1.5 py-1 text-[11px] font-bold text-white bg-slate-900/90 border border-fuchsia-500/30 rounded-lg focus:outline-hidden cursor-pointer"
                     >
                       {groups.map((g) => (
                         <option key={g} value={g}>
@@ -687,15 +698,15 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                     </select>
                   </div>
 
-                  <div className="p-2.5 rounded-2xl bg-teal-50/60 border border-teal-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-teal-900 flex items-center gap-1">
-                      <span>🏫</span>
+                  {/* Section Selector - Teal Container */}
+                  <div className="p-1.5 rounded-xl bg-teal-950/60 border border-teal-500/40 space-y-0.5">
+                    <label className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-teal-300 flex items-center gap-0.5">
                       <span>Section</span>
                     </label>
                     <select
                       value={formData.section}
                       onChange={(e) => setFormData({ ...formData, section: e.target.value as Section })}
-                      className="w-full px-2 py-1.5 text-xs font-bold bg-white border border-teal-200 rounded-xl focus:outline-none"
+                      className="w-full px-1.5 py-1 text-[11px] font-bold text-white bg-slate-900/90 border border-teal-500/30 rounded-lg focus:outline-hidden cursor-pointer"
                     >
                       {sections.map((s) => (
                         <option key={s} value={s}>
@@ -706,87 +717,87 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
                   </div>
                 </div>
 
-                {/* Permanent Address */}
-                <div className="p-3 rounded-2xl bg-orange-50/50 border border-orange-100 space-y-1">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-orange-900 flex items-center gap-1">
-                    <span>📍</span>
-                    <span>Permanent Residential Address:</span>
+                {/* Address Field - Orange Container */}
+                <div className="p-2 rounded-xl bg-orange-950/60 border border-orange-500/40 space-y-1 transition-all focus-within:bg-orange-900/60 focus-within:border-orange-400 shadow-xs">
+                  <label className="text-[9px] font-bold uppercase tracking-wider text-orange-300 flex items-center gap-1">
+                    <MapPin className="w-3 h-3 text-orange-400" />
+                    <span>Permanent Address:</span>
                   </label>
                   <div className="relative">
-                    <MapPin className="w-4 h-4 text-orange-400 absolute left-3 top-2.5" />
                     <input
                       type="text"
-                      placeholder="e.g. Flat 3A, House 12, Road 4, Dhanmondi, Dhaka"
+                      placeholder="e.g. House 12, Road 4, Dhanmondi, Dhaka"
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                       required
-                      className="w-full pl-9 pr-3 py-2 text-xs font-bold bg-white border border-orange-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-300"
+                      className="w-full px-2.5 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-orange-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-orange-400 placeholder:text-slate-500 shadow-inner"
                     />
                   </div>
                 </div>
 
-                {/* Passwords */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-3 rounded-2xl bg-pink-50/50 border border-pink-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-pink-900 flex items-center gap-1">
-                      <span>🔑</span>
-                      <span>Create Password:</span>
+                {/* Password & Confirm Password - Pink & Purple Boxes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {/* Create Password - Pink Theme */}
+                  <div className="p-2 rounded-xl bg-pink-950/60 border border-pink-500/40 space-y-1 transition-all focus-within:bg-pink-900/60 focus-within:border-pink-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-pink-300 flex items-center gap-1">
+                      <Lock className="w-3 h-3 text-pink-400" />
+                      <span>Password:</span>
                     </label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-pink-400 absolute left-3 top-2.5" />
                       <input
                         type={showRegPassword ? 'text' : 'password'}
-                        placeholder="Min. 6 characters"
+                        placeholder="Min 6 chars"
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         required
-                        className="w-full pl-9 pr-10 py-2 text-xs font-bold bg-white border border-pink-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300"
+                        className="w-full pl-2.5 pr-8 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-pink-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-pink-400 placeholder:text-slate-500 shadow-inner"
                       />
                       <button
                         type="button"
                         onClick={() => setShowRegPassword(!showRegPassword)}
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-pink-400 hover:text-pink-700 cursor-pointer"
+                        className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-pink-400 hover:text-pink-200 cursor-pointer"
                       >
-                        {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showRegPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-fuchsia-50/50 border border-fuchsia-100 space-y-1">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-fuchsia-900 flex items-center gap-1">
-                      <span>🛡️</span>
+                  {/* Confirm Password - Purple Theme */}
+                  <div className="p-2 rounded-xl bg-fuchsia-950/60 border border-fuchsia-500/40 space-y-1 transition-all focus-within:bg-fuchsia-900/60 focus-within:border-fuchsia-400 shadow-xs">
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-fuchsia-300 flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-fuchsia-400" />
                       <span>Confirm Password:</span>
                     </label>
                     <div className="relative">
-                      <ShieldCheck className="w-4 h-4 text-fuchsia-400 absolute left-3 top-2.5" />
                       <input
                         type={showRegConfirmPassword ? 'text' : 'password'}
                         placeholder="Repeat password"
                         value={formData.confirmPassword}
                         onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                         required
-                        className="w-full pl-9 pr-10 py-2 text-xs font-bold bg-white border border-fuchsia-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-300"
+                        className="w-full pl-2.5 pr-8 py-1.5 text-[11px] font-bold text-white bg-slate-900/90 border border-fuchsia-500/30 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-fuchsia-400 placeholder:text-slate-500 shadow-inner"
                       />
                       <button
                         type="button"
                         onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-fuchsia-400 hover:text-fuchsia-700 cursor-pointer"
+                        className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-fuchsia-400 hover:text-fuchsia-200 cursor-pointer"
                       >
-                        {showRegConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showRegConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   </div>
                 </div>
 
+                {/* Submit Registration Button */}
                 <button
                   id="btn-submit-registration"
                   type="submit"
                   disabled={registerSubmitting}
-                  className="w-full py-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white text-xs font-black uppercase tracking-wider rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600 hover:from-emerald-600 hover:to-teal-700 text-slate-950 text-[11px] font-extrabold uppercase tracking-wider rounded-xl transition-all shadow-md shadow-emerald-600/25 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5 cursor-pointer mt-1"
                 >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>{registerSubmitting ? 'Submitting Registration...' : 'Submit for Academic Approval 🚀'}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                  <span>{registerSubmitting ? 'Submitting...' : 'Submit for Academic Approval 🚀'}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
                 </button>
               </form>
             )}
@@ -796,4 +807,6 @@ export const AuthPage: React.FC<{ initialTab?: 'login' | 'register' }> = ({ init
     </div>
   );
 };
+
+export default AuthPage;
 

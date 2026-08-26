@@ -1,4 +1,4 @@
-import { User, AttendanceRecord, AttendanceStatus, LeaveRequest, LeaveStatus } from '../../src/types';
+import { User, AttendanceRecord, AttendanceStatus, LeaveRequest, LeaveStatus, LeaveType } from '../../src/types';
 
 export function normalizeBatch(batch?: string | null): string {
   if (!batch) return '';
@@ -82,6 +82,8 @@ export function formatAttendanceDoc(doc: any, user?: User | null): AttendanceRec
   let status: AttendanceStatus = 'absent';
   if (rawStatus === 'present') {
     status = 'present';
+  } else if (rawStatus === 'fraud') {
+    status = 'fraud';
   } else if (rawStatus === 'leave' || rawStatus === 'excused' || rawStatus === 'late') {
     if (doc.leaveStatus === 'Pending' || doc.leaveStatus === 'Rejected') {
       status = 'absent';
@@ -92,9 +94,21 @@ export function formatAttendanceDoc(doc: any, user?: User | null): AttendanceRec
     status = 'absent';
   }
 
-  const captainsNote = doc.captainsNote || doc.remarks || doc.reviewNote || '';
-  const studentsNote = doc.studentsNote || doc.studentNote || doc.leaveReason || doc.reason || '';
-  const leaveReason = doc.leaveReason || studentsNote;
+  let captainsNote = doc.captainsNote || doc.reviewNote || '';
+  if (!captainsNote && doc.remarks && doc.remarks !== doc.studentsNote && doc.remarks !== doc.studentNote && doc.remarks !== doc.leaveReason) {
+    captainsNote = doc.remarks;
+  }
+  if (status === 'fraud' && (!captainsNote || captainsNote === 'Frauded The attendance')) {
+    captainsNote = 'Fraud Present Detected.';
+  }
+  const studentsNote = doc.studentsNote || doc.studentNote || (doc.leaveReason && doc.leaveReason.length > 25 ? doc.leaveReason : '');
+  const isLeave = status === 'leave' || doc.leaveStatus === 'Approved' || doc.leaveStatus === 'Pending';
+  let leaveReason = doc.leaveReason || doc.leaveType || '';
+  if (isLeave) {
+    if (!leaveReason || leaveReason === studentsNote || leaveReason.length > 25) {
+      leaveReason = doc.leaveType || 'Casual';
+    }
+  }
   const leaveStatus = doc.leaveStatus || (status === 'leave' ? 'Approved' : 'None');
   const email = (doc.email || doc.studentEmail || user?.email || '').trim().toLowerCase();
   const reviewedBy = doc.reviewedBy || doc.markedBy || null;
@@ -142,7 +156,11 @@ export function formatLeaveDoc(doc: any, user?: User | null): LeaveRequest {
   }
 
   const captainsNote = doc.captainsNote || doc.reviewNote || doc.remarks || '';
-  const reason = doc.leaveReason || doc.studentsNote || doc.reason || '';
+  const detailedReason = doc.studentsNote || doc.studentNote || doc.reason || '';
+  let leaveCategory = doc.leaveReason || doc.leaveType || 'Casual';
+  if (leaveCategory === detailedReason || leaveCategory.length > 25) {
+    leaveCategory = doc.leaveType || 'Casual';
+  }
   const reviewedBy = doc.reviewedBy || doc.markedBy;
 
   return {
@@ -156,13 +174,13 @@ export function formatLeaveDoc(doc: any, user?: User | null): LeaveRequest {
     batch: (user?.batch || doc.batch || 'HSC 2026') as any,
     section: (user?.section || doc.section || 'A') as any,
     group: (user?.group || doc.group || 'Science') as any,
-    leaveType: doc.leaveType || 'Casual',
+    leaveType: (leaveCategory as LeaveType) || 'Casual',
     startDate: date,
     endDate: date,
     daysCount: 1, // Single day leave constraint
-    reason,
-    leaveReason: reason,
-    studentsNote: doc.studentsNote || reason,
+    reason: detailedReason,
+    leaveReason: leaveCategory,
+    studentsNote: detailedReason,
     captainsNote,
     reviewNote: captainsNote,
     status: resolvedStatus,

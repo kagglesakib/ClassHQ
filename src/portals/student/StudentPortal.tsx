@@ -125,26 +125,25 @@ export const StudentPortal: React.FC = () => {
                   leaves={leaves}
                   captains={captains}
                   loading={loading}
-                  onOpenLeaveModal={() => navigate('/student/leave')}
+                  onOpenLeaveModal={() => navigate('/student/attendance')}
                 />
               }
             />
             <Route
               path="/attendance"
-              element={<StudentAttendanceView records={records} leaves={leaves} loading={loading} />}
-            />
-            <Route
-              path="/leave"
               element={
-                <StudentLeaveView
+                <StudentAttendanceView
+                  records={records}
                   leaves={leaves}
                   captains={captains}
                   onSubmitLeave={handleSubmitLeave}
                   onUpdateLeave={handleUpdateLeave}
+                  onRefreshData={fetchStudentData}
                   loading={loading}
                 />
               }
             />
+            <Route path="/leave" element={<Navigate to="/student/attendance" replace />} />
             <Route
               path="/profile"
               element={

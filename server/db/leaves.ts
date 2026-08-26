@@ -1,8 +1,52 @@
+import mongoose from 'mongoose';
 import { LeaveRequest, LeaveStatus, LeaveType, UserRole } from '../../src/types';
 import { memoryAttendance, isMongoConnected } from './connection';
 import { AttendanceModel } from './models';
 import { getAllUsers } from './users';
 import { formatLeaveDoc, compareBatch, compareSection } from './helpers';
+
+function buildLeaveMongoQuery(id: string) {
+  const orConditions: any[] = [{ id: id }, { id: id.toLowerCase() }];
+  if (id) {
+    orConditions.push({ _id: id });
+  }
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    orConditions.push({ _id: new mongoose.Types.ObjectId(id) });
+  }
+
+  // Parse if composite id leave-email-YYYY-MM-DD
+  if (id.startsWith('leave-') || id.toLowerCase().startsWith('leave-')) {
+    const parts = id.split('-');
+    if (parts.length >= 4) {
+      const dateStr = parts.slice(-3).join('-');
+      const emailStr = parts.slice(1, -3).join('-');
+      if (emailStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        orConditions.push({
+          email: { $regex: new RegExp(`^${emailStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
+          date: dateStr,
+        });
+      }
+    }
+    orConditions.push({
+      $expr: {
+        $eq: [{ $concat: ['leave-', '$email', '-', '$date'] }, id],
+      },
+    });
+  }
+
+  return { $or: orConditions };
+}
+
+function matchesLeaveInMemory(item: any, id: string): boolean {
+  if (!item || !id) return false;
+  const targetId = id.trim().toLowerCase();
+  if (item.id && String(item.id).toLowerCase() === targetId) return true;
+  if (item._id && String(item._id).toLowerCase() === targetId) return true;
+  const email = (item.email || item.studentEmail || '').trim().toLowerCase();
+  const date = item.date || item.startDate || '';
+  if (email && date && `leave-${email}-${date}`.toLowerCase() === targetId) return true;
+  return false;
+}
 
 export async function getAllLeaveRequests(): Promise<LeaveRequest[]> {
   const allUsers = await getAllUsers();
@@ -55,7 +99,7 @@ export async function getLeavesByStudent(identifier: string, email?: string): Pr
     try {
       const docs = await (AttendanceModel as any)
         .find({
-          email: { $regex: new RegExp(`^${targetEmail}$`, 'i') },
+          email: targetEmail,
           $or: [
             { status: 'leave' },
             { leaveStatus: { $in: ['Pending', 'Approved', 'Rejected'] } },
@@ -90,13 +134,13 @@ export async function getLeavesBySection(batch: string, section: string): Promis
       compareSection(u.section || u.assignedSection, section)
   );
   const userMap = new Map(sectionUsers.map((u) => [u.email.toLowerCase(), u]));
-  const sectionEmails = sectionUsers.map((u) => u.email.toLowerCase());
+  const sectionEmails = sectionUsers.map((u) => u.email.toLowerCase()).filter(Boolean);
 
   if (isMongoConnected && sectionEmails.length > 0) {
     try {
       const docs = await (AttendanceModel as any)
         .find({
-          email: { $in: sectionEmails.map((e) => new RegExp(`^${e}$`, 'i')) },
+          email: { $in: sectionEmails },
           $or: [
             { status: 'leave' },
             { leaveStatus: { $in: ['Pending', 'Approved', 'Rejected'] } },
@@ -139,16 +183,19 @@ export async function createLeaveRequest(leave: LeaveRequest): Promise<LeaveRequ
   const targetEmail = user?.email.toLowerCase() || email;
   const leaveDate = leave.startDate || (leave as any).leaveDate || new Date().toISOString().split('T')[0];
 
+  const category = leave.leaveType || leave.leaveReason || 'Casual';
+  const detailedReason = leave.reason || leave.studentsNote || '';
+
   const now = new Date().toISOString();
   const record = {
     id: `leave-${targetEmail}-${leaveDate}`,
     email: targetEmail,
     date: leaveDate,
     status: 'absent' as const,
-    studentsNote: leave.reason || '',
+    studentsNote: detailedReason,
     captainsNote: '',
-    leaveType: leave.leaveType || 'General',
-    leaveReason: leave.reason || '',
+    leaveType: category,
+    leaveReason: category,
     leaveStatus: 'Pending' as const,
     submittedAt: now,
     timestamp: now,
@@ -192,8 +239,7 @@ export async function updateLeaveRequestStatus(
 
   for (let i = 0; i < memoryAttendance.length; i++) {
     const item = memoryAttendance[i];
-    const matchId = item.id === id || `leave-${item.email}-${item.date}` === id;
-    if (matchId) {
+    if (matchesLeaveInMemory(item, id)) {
       item.leaveStatus = status;
       if (status === 'Approved') {
         item.status = 'leave';
@@ -228,20 +274,9 @@ export async function updateLeaveRequestStatus(
         updateData.status = 'absent';
       }
 
+      const query = buildLeaveMongoQuery(id);
       const updated = await (AttendanceModel as any).findOneAndUpdate(
-        {
-          $or: [
-            { id },
-            {
-              $expr: {
-                $eq: [
-                  { $concat: ['leave-', '$email', '-', '$date'] },
-                  id,
-                ],
-              },
-            },
-          ],
-        },
+        query,
         updateData,
         { new: true }
       );
@@ -277,8 +312,7 @@ export async function updateStudentLeaveRequest(
   let matchedIdx = -1;
   for (let i = 0; i < memoryAttendance.length; i++) {
     const item = memoryAttendance[i];
-    const matchId = item.id === id || `leave-${item.email}-${item.date}` === id;
-    if (matchId) {
+    if (matchesLeaveInMemory(item, id)) {
       const itemEmail = (item.email || item.studentEmail || '').toLowerCase();
       if (itemEmail && targetEmail && itemEmail !== targetEmail && item.studentId !== studentUser.id) {
         return null;
@@ -303,10 +337,10 @@ export async function updateStudentLeaveRequest(
     const oldDate = item.date;
     if (newReason !== undefined) {
       item.studentsNote = newReason;
-      item.leaveReason = newReason;
     }
     if (newLeaveType !== undefined) {
       item.leaveType = newLeaveType;
+      item.leaveReason = newLeaveType;
     }
     if (newDate && newDate !== oldDate) {
       item.date = newDate;
@@ -319,16 +353,8 @@ export async function updateStudentLeaveRequest(
 
   if (isMongoConnected) {
     try {
-      const existingDoc = await (AttendanceModel as any).findOne({
-        $or: [
-          { id },
-          {
-            $expr: {
-              $eq: [{ $concat: ['leave-', '$email', '-', '$date'] }, id],
-            },
-          },
-        ],
-      }).lean();
+      const query = buildLeaveMongoQuery(id);
+      const existingDoc = await (AttendanceModel as any).findOne(query).lean();
 
       if (existingDoc) {
         const itemEmail = (existingDoc.email || '').toLowerCase();
@@ -345,10 +371,10 @@ export async function updateStudentLeaveRequest(
         };
         if (newReason !== undefined) {
           updateFields.studentsNote = newReason;
-          updateFields.leaveReason = newReason;
         }
         if (newLeaveType !== undefined) {
           updateFields.leaveType = newLeaveType;
+          updateFields.leaveReason = newLeaveType;
         }
         if (newDate && newDate !== existingDoc.date) {
           updateFields.date = newDate;

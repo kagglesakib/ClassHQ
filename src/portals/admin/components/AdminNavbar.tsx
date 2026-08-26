@@ -6,6 +6,9 @@ import {
   Users, 
   Clock,
   LogOut,
+  ShieldCheck,
+  User as UserIcon,
+  Settings,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -23,6 +26,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
     { path: '/admin', label: 'Institutional Overview', mobileLabel: 'Overview', icon: LayoutDashboard, exact: true },
     { path: '/admin/students', label: 'Approved Students', mobileLabel: 'Students', icon: Users, exact: true },
     { path: '/admin/pending-students', label: 'Pending Approvals', mobileLabel: 'Pending', icon: Clock, badge: pendingStudentsCount },
+    { path: '/admin/profile', label: 'My Profile & Security', mobileLabel: 'Profile', icon: ShieldCheck },
   ];
 
   const isActive = (path: string, exact?: boolean) => {
@@ -89,6 +93,32 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
 
           {/* Right Action Icons & Controls */}
           <div className="flex items-center gap-1.5 shrink-0">
+            <Link
+              to="/admin/settings"
+              className={`h-9 px-2.5 sm:px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 text-xs font-black active:scale-95 border ${
+                isActive('/admin/settings')
+                  ? 'bg-rose-600 text-white border-rose-600 shadow-sm'
+                  : 'text-slate-700 bg-slate-100/90 hover:bg-rose-50 hover:text-rose-700 border-slate-200/80 hover:border-rose-200'
+              }`}
+              title="System Settings"
+            >
+              <Settings className="w-4 h-4 shrink-0" />
+              <span className="hidden md:inline">Settings</span>
+            </Link>
+
+            <Link
+              to="/admin/profile"
+              className={`h-9 px-2.5 sm:px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 text-xs font-black active:scale-95 border ${
+                isActive('/admin/profile')
+                  ? 'bg-rose-600 text-white border-rose-600 shadow-sm'
+                  : 'text-slate-700 bg-slate-100/90 hover:bg-rose-50 hover:text-rose-700 border-slate-200/80 hover:border-rose-200'
+              }`}
+              title="Admin Profile & Security"
+            >
+              <UserIcon className="w-4 h-4 shrink-0" />
+              <span className="hidden md:inline">Profile</span>
+            </Link>
+
             <button
               id="btn-admin-logout"
               type="button"
@@ -104,7 +134,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
 
         {/* Mobile & Tablet Full-Width Segmented Tab Control (xl:hidden) */}
         <div className="pb-2.5 pt-0.5 xl:hidden">
-          <div className="grid grid-cols-3 gap-1 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 shadow-inner">
+          <div className="grid grid-cols-4 gap-1 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 shadow-inner">
             {navItems.map((item) => {
               const active = isActive(item.path, item.exact);
               const Icon = item.icon;
@@ -112,7 +142,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs uppercase tracking-wider transition-all text-center min-w-0 ${
+                  className={`flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-xl text-xs uppercase tracking-wider transition-all text-center min-w-0 ${
                     active
                       ? 'bg-white text-rose-700 font-black shadow-xs border border-rose-200/80'
                       : 'text-slate-600 font-bold hover:text-slate-900 hover:bg-white/40'

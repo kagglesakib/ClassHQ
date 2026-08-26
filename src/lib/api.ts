@@ -9,6 +9,7 @@ import {
   SectionCaptainInfo,
   ApprovalStatus,
   LeaveStatus,
+  SystemSettings,
 } from '../types';
 
 const API_BASE = '/api';
@@ -129,6 +130,12 @@ export const api = {
 
   getStudentAttendance: (studentId?: string) =>
     request<{ records: AttendanceRecord[] }>(`/student/attendance-history${studentId ? `?studentId=${studentId}` : ''}`),
+
+  submitStudentSelfAttendance: (data: { status: 'present' | 'absent'; remarks?: string; date?: string }) =>
+    request<{ success: boolean; message: string; record: AttendanceRecord }>('/student/self-attendance', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 
   getStudentLeaves: (studentId?: string) =>
     request<{ leaves: LeaveRequest[] }>(`/student/leave-requests${studentId ? `?studentId=${studentId}` : ''}`),
@@ -269,6 +276,14 @@ export const api = {
     request<{ success: boolean; message: string; leave: LeaveRequest }>(`/admin/leaves/${id}/review`, {
       method: 'PATCH',
       body: JSON.stringify({ status, reviewNote }),
+    }),
+
+  // Settings
+  getSystemSettings: () => request<SystemSettings>('/settings'),
+  updateSystemSettings: (data: { startTime: string; endTime: string }) =>
+    request<{ success: boolean; message: string; settings: SystemSettings }>('/admin/settings', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
     }),
 
   // System

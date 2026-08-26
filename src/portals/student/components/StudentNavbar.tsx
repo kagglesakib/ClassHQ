@@ -24,8 +24,7 @@ export const StudentNavbar: React.FC<StudentNavbarProps> = ({ attendancePercenta
 
   const navItems = [
     { path: '/student', label: 'Overview', icon: LayoutDashboard, exact: true },
-    { path: '/student/attendance', label: 'Attendance', icon: CalendarCheck },
-    { path: '/student/leave', label: 'Leaves', icon: FileText },
+    { path: '/student/attendance', label: 'Attendance & Leaves', icon: CalendarCheck },
     { path: '/student/profile', label: 'Profile', icon: UserIcon },
   ];
 

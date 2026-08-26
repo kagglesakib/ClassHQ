@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import dotenv from 'dotenv';
+import http from 'http';
 import { createServer as createViteServer } from 'vite';
 
 import {
@@ -32,6 +33,8 @@ import {
   compareSection,
   normalizeBatch,
   normalizeSection,
+  getSystemSettingsDB,
+  updateSystemSettingsDB,
 } from './server/db';
 import {
   generateToken,
@@ -384,6 +387,77 @@ async function startServer() {
   });
 
   // ------------------------------------
+  // Time Window Logic for Attendance
+  // ------------------------------------
+  function parseTime(timeStr: string): { hours: number; minutes: number } {
+    if (!timeStr) return { hours: 15, minutes: 0 };
+    const match = String(timeStr).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+    if (!match) return { hours: 15, minutes: 0 };
+    let [_, h, m, p] = match;
+    let hours = parseInt(h, 10);
+    const minutes = parseInt(m, 10);
+    if (p) {
+      const period = p.toUpperCase();
+      if (period === 'PM' && hours < 12) hours += 12;
+      if (period === 'AM' && hours === 12) hours = 0;
+    }
+    return { hours, minutes };
+  }
+
+  function isTimeWithinWindow(now: Date, startStr: string, endStr: string): boolean {
+    const start = parseTime(startStr);
+    const end = parseTime(endStr);
+
+    let dhakaHours = now.getHours();
+    let dhakaMinutes = now.getMinutes();
+    try {
+      const dhakaTimeStr = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Dhaka', hour12: false, hour: '2-digit', minute: '2-digit' });
+      const [h, m] = dhakaTimeStr.split(':').map(Number);
+      if (!isNaN(h) && !isNaN(m)) {
+        dhakaHours = h;
+        dhakaMinutes = m;
+      }
+    } catch (e) {
+      // fallback
+    }
+
+    const startMins = start.hours * 60 + start.minutes;
+    const endMins = end.hours * 60 + end.minutes;
+
+    const checkMins = (nowMins: number) => {
+      if (startMins < endMins) {
+        return nowMins >= startMins && nowMins <= endMins;
+      } else {
+        return nowMins >= startMins || (endMins > 0 && nowMins < endMins);
+      }
+    };
+
+    const nativeMins = now.getHours() * 60 + now.getMinutes();
+    const bgMins = dhakaHours * 60 + dhakaMinutes;
+
+    return checkMins(nativeMins) || checkMins(bgMins);
+  }
+
+  // General Settings Access (available to students, captains, and admins)
+  app.get('/api/settings', async (req, res) => {
+    try {
+      const settings = await getSystemSettingsDB();
+      res.json(settings);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to fetch settings' });
+    }
+  });
+
+  app.get('/api/system/settings', async (req, res) => {
+    try {
+      const settings = await getSystemSettingsDB();
+      res.json(settings);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to fetch settings' });
+    }
+  });
+
+  // ------------------------------------
   // Student Portal API Endpoints
   // ------------------------------------
 
@@ -404,12 +478,14 @@ async function startServer() {
       let daysPresent = 0;
       let daysAbsent = 0;
       let daysLeave = 0;
+      let daysFraud = 0;
 
       for (const rec of attendanceRecords) {
         const st = String(rec.status || '').toLowerCase();
         if (st === 'present') daysPresent++;
         else if (st === 'absent') daysAbsent++;
         else if (st === 'leave' || st === 'excused' || st === 'late') daysLeave++;
+        else if (st === 'fraud') daysFraud++;
         else daysPresent++;
       }
 
@@ -427,6 +503,7 @@ async function startServer() {
         daysPresent,
         daysAbsent,
         daysLeave,
+        daysFraud,
         daysLate: 0,
         daysExcused: 0,
         totalLeaveRequests,
@@ -452,6 +529,123 @@ async function startServer() {
       res.json({ records });
     } catch (err: any) {
       res.status(500).json({ error: err?.message || 'Error fetching attendance history.' });
+    }
+  });
+
+  // Student Self-Report Attendance (Present/Absent for Tomorrow strictly between 3 PM and 12 AM except Fri/Sat)
+  app.post('/api/student/self-attendance', requireAuth, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { status, remarks } = req.body;
+      const normalizedStatus = String(status || '').toLowerCase();
+      if (!['present', 'absent'].includes(normalizedStatus)) {
+        res.status(400).json({ error: 'Status must be either "present" or "absent".' });
+        return;
+      }
+
+      const now = new Date();
+      const settings = await getSystemSettingsDB();
+      const startTime = settings.startTime || '3:00 PM';
+      const endTime = settings.endTime || '12:00 AM';
+
+      if (!isTimeWithinWindow(now, startTime, endTime)) {
+        res.status(400).json({
+          error: `Next-day attendance self-reporting window opens at ${startTime} today (Active window: ${startTime} – ${endTime}).`
+        });
+        return;
+      }
+
+      // Next academic working day target date (excluding Friday and Saturday)
+      const targetDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      while (targetDate.getDay() === 5 || targetDate.getDay() === 6) {
+        targetDate.setDate(targetDate.getDate() + 1);
+      }
+      const y = targetDate.getFullYear();
+      const m = String(targetDate.getMonth() + 1).padStart(2, '0');
+      const d = String(targetDate.getDate()).padStart(2, '0');
+      const calculatedDateStr = `${y}-${m}-${d}`;
+      const dateStr =
+        req.body.date && typeof req.body.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(req.body.date)
+          ? req.body.date
+          : calculatedDateStr;
+
+      // Validate that requested target date is not a weekend (Friday=5, Saturday=6)
+      const requestedDateObj = new Date(dateStr + 'T00:00:00');
+      const requestedDayOfWeek = requestedDateObj.getDay();
+      if (requestedDayOfWeek === 5 || requestedDayOfWeek === 6) {
+        res.status(400).json({
+          error: 'The requested date is Friday/Saturday (Weekend Holiday). Attendance self-reporting is for academic working days only.'
+        });
+        return;
+      }
+      const user = req.user!;
+
+      // Block student from marking/editing attendance if leave for that date is officially approved
+      const userLeaves = await getLeavesByStudent(user.userId);
+      const approvedLeaveForDate = userLeaves.find(
+        (l) => l.status === 'Approved' && (l.startDate === dateStr || l.endDate === dateStr || (l as any).date === dateStr)
+      );
+      if (approvedLeaveForDate) {
+        res.status(400).json({
+          error: `Attendance for ${dateStr} is locked because your leave application has been officially approved by section captain. You cannot edit or mark yourself present/absent.`
+        });
+        return;
+      }
+
+      const fullUser = (await findUserById(user.userId)) || (await findUserByEmail(user.email));
+      const gender = String(fullUser?.gender || (user as any).gender || '').toLowerCase();
+
+      let studentNote = '';
+      if (normalizedStatus === 'present') {
+        if (gender.startsWith('m') || gender === 'male') {
+          studentNote = 'Marked Himself As Present';
+        } else if (gender.startsWith('f') || gender === 'female') {
+          studentNote = 'Marked Herself As Present';
+        } else {
+          studentNote = 'Marked Himself/Herself As Present';
+        }
+      } else {
+        if (gender.startsWith('m') || gender === 'male') {
+          studentNote = 'Marked Himself As Absent';
+        } else if (gender.startsWith('f') || gender === 'female') {
+          studentNote = 'Marked Herself As Absent';
+        } else {
+          studentNote = 'Marked Himself/Herself As Absent';
+        }
+      }
+
+      if (remarks && String(remarks).trim()) {
+        studentNote = String(remarks).trim();
+      }
+
+      const newRecord: AttendanceRecord = {
+        id: `att-${user.userId}-${dateStr}`,
+        studentId: user.userId,
+        studentName: user.fullName,
+        email: user.email,
+        batch: user.batch,
+        section: user.section,
+        group: user.group,
+        date: dateStr,
+        status: (normalizedStatus === 'present' ? 'Present' : 'Absent') as AttendanceStatus,
+        studentsNote: studentNote,
+        remarks: studentNote,
+        markedBy: {
+          id: user.userId,
+          name: `${user.fullName} (Self)`,
+          role: 'student',
+        },
+        timestamp: new Date().toISOString(),
+      };
+
+      await saveOrUpdateAttendanceRecords([newRecord]);
+
+      res.json({
+        success: true,
+        message: `Your status for ${dateStr} has been recorded as ${normalizedStatus.toUpperCase()}.`,
+        record: newRecord,
+      });
+    } catch (err: any) {
+      res.status(500).json({ error: err?.message || 'Error recording self-attendance.' });
     }
   });
 
@@ -526,6 +720,15 @@ async function startServer() {
 
       const diffTime = Math.abs(end.getTime() - start.getTime());
       const daysCount = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+      const existingLeaves = await getLeavesByStudent(req.user!.userId);
+      const alreadyApproved = existingLeaves.find(
+        (l) => l.status === 'Approved' && (l.startDate === targetDate || l.endDate === targetDate || (l as any).date === targetDate)
+      );
+      if (alreadyApproved) {
+        res.status(400).json({ error: `An approved leave application already exists for ${targetDate}. Attendance is locked for this day.` });
+        return;
+      }
 
       const newLeave: LeaveRequest = {
         id: `leave-req-${Date.now()}`,
@@ -667,18 +870,43 @@ async function startServer() {
         const rec = recordMap.get(st.id) || (st.email ? recordMap.get(st.email.toLowerCase()) : undefined);
         const approvedLeave = approvedLeaveMap.get(st.id) || (st.email ? approvedLeaveMap.get(st.email.toLowerCase()) : undefined);
 
-        let status: AttendanceStatus = 'present';
-        if (rec) {
-          status = rec.status;
-        } else if (approvedLeave) {
-          status = 'leave';
+        let status: AttendanceStatus = 'Absent';
+        let studentsNote = '';
+
+        if (!rec && !approvedLeave) {
+          // 1. if no data of that specific date exist, then it is shown absent, and show studentsNote, "Auto Marked as Absent"
+          status = 'Absent';
+          studentsNote = 'Auto Marked as Absent';
         } else {
-          status = 'present';
+          // Data exists for that date
+          if (rec) {
+            status = rec.status;
+          } else if (approvedLeave) {
+            status = 'leave';
+          }
+
+          const existingNote = (
+            rec?.studentsNote ||
+            rec?.remarks ||
+            approvedLeave?.reason ||
+            approvedLeave?.studentsNote ||
+            ''
+          ).trim();
+
+          // 2. if data of that specific date exist but remarks field is empty, then it is shown current status, and show studentsNote, "Empty And Unknown"
+          if (!existingNote) {
+            studentsNote = 'Empty And Unknown';
+          } else {
+            studentsNote = existingNote;
+          }
         }
 
-        const studentsNote = rec?.studentsNote || approvedLeave?.reason || approvedLeave?.studentsNote || '';
-        const captainsNote = rec?.captainsNote || rec?.remarks || approvedLeave?.captainsNote || approvedLeave?.reviewNote || '';
-        const leaveReason = approvedLeave?.reason || rec?.leaveReason || studentsNote;
+        let captainsNote = rec?.captainsNote || approvedLeave?.captainsNote || approvedLeave?.reviewNote || '';
+        if (String(status).toLowerCase() === 'fraud' && (!captainsNote || captainsNote === 'Frauded The attendance')) {
+          captainsNote = 'Fraud Present Detected.';
+        }
+        const isLeaveStatus = String(status).toLowerCase() === 'leave';
+        const leaveReason = approvedLeave?.reason || rec?.leaveReason || (isLeaveStatus ? (studentsNote !== 'Empty And Unknown' && studentsNote !== 'Auto Marked as Absent' ? studentsNote : '') : '');
         const leaveStatus = approvedLeave ? 'Approved' : (rec?.leaveStatus || 'None');
 
         return {
@@ -688,12 +916,12 @@ async function startServer() {
           group: st.group,
           phoneNumber: st.phoneNumber,
           email: st.email,
+          gender: st.gender || 'Male',
           role: st.role,
           status,
           isMarked: Boolean(rec),
           studentsNote,
           captainsNote,
-          remarks: captainsNote,
           leaveReason,
           leaveStatus,
         };
@@ -735,12 +963,16 @@ async function startServer() {
         const rawStatus = (r.status || 'present').toString().toLowerCase();
         let status: AttendanceStatus = 'present';
         if (rawStatus === 'absent') status = 'absent';
+        else if (rawStatus === 'fraud') status = 'Fraud';
         else if (rawStatus === 'leave' || rawStatus === 'excused' || rawStatus === 'late') status = 'leave';
         else status = 'present';
 
-        const captainsNote = r.captainsNote || r.remarks || '';
+        let captainsNote = r.captainsNote || '';
+        if (status === 'Fraud' && (!captainsNote.trim() || captainsNote === 'Frauded The attendance')) {
+          captainsNote = 'Fraud Present Detected.';
+        }
         const studentsNote = r.studentsNote || '';
-        const leaveReason = r.leaveReason || studentsNote;
+        const leaveReason = r.leaveReason || (status === 'leave' ? studentsNote : '');
         const leaveStatus = status === 'leave' ? 'Approved' : 'None';
 
         return {
@@ -875,6 +1107,30 @@ async function startServer() {
   // ------------------------------------
   // Academic Administrator Portal API
   // ------------------------------------
+
+  // Settings
+  app.get('/api/admin/settings', authMiddleware, requireRoles(['admin']), async (req, res) => {
+    try {
+      const settings = await getSystemSettingsDB();
+      res.json(settings);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to fetch settings' });
+    }
+  });
+
+  app.patch('/api/admin/settings', authMiddleware, requireRoles(['admin']), async (req: AuthenticatedRequest, res) => {
+    try {
+      const { startTime, endTime } = req.body;
+      if (!startTime || !endTime) {
+        return res.status(400).json({ error: 'startTime and endTime are required' });
+      }
+
+      const settings = await updateSystemSettingsDB(startTime, endTime, req.user?.fullName || 'System Admin');
+      res.json({ success: true, message: 'Settings updated successfully', settings });
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to update settings' });
+    }
+  });
 
   // Admin Overview Statistics
   app.get('/api/admin/overview-stats', authMiddleware, requireRoles(['admin']), async (req, res) => {
@@ -1438,7 +1694,12 @@ async function startServer() {
 
       if (req.user?.role === 'captain') {
         const allLeaves = await getAllLeaveRequests();
-        const targetLeave = allLeaves.find((l) => l.id === id);
+        const targetLeave = allLeaves.find(
+          (l) =>
+            l.id === id ||
+            l.id.toLowerCase() === id.toLowerCase() ||
+            `leave-${(l.studentEmail || '').toLowerCase()}-${l.startDate}` === id.toLowerCase()
+        );
         if (targetLeave) {
           const isOwn =
             (req.user.userId && targetLeave.studentId === req.user.userId) ||
@@ -1476,9 +1737,14 @@ async function startServer() {
   // ------------------------------------
   // Vite Middleware & SPA Fallback
   // ------------------------------------
+  const httpServer = http.createServer(app);
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { 
+        middlewareMode: true,
+        hmr: { server: httpServer }
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -1490,7 +1756,7 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`[ClassHQ Server] Running on http://localhost:${PORT}`);
   });
 }

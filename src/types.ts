@@ -11,7 +11,7 @@ export type HSCBatch =
 export type AcademicGroup = 'Science' | 'Arts' | 'Commerce';
 export type Section = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I';
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
-export type AttendanceStatus = 'present' | 'absent' | 'leave' | 'Present' | 'Absent' | 'Leave';
+export type AttendanceStatus = 'present' | 'absent' | 'leave' | 'fraud' | 'Present' | 'Absent' | 'Leave' | 'Fraud';
 export type LeaveType = 'Medical' | 'Casual' | 'Emergency' | 'Academic' | 'Family' | 'Others';
 export type LeaveStatus = 'Pending' | 'Approved' | 'Rejected';
 
@@ -131,6 +131,7 @@ export interface StudentDashboardStats {
   daysPresent: number;
   daysAbsent: number;
   daysLeave: number;
+  daysFraud?: number;
   daysLate?: number;
   daysExcused?: number;
   totalLeaveRequests: number;
@@ -219,4 +220,12 @@ export interface UserProfileDetail {
   attendanceStats: StudentDashboardStats;
   attendanceRecords: AttendanceRecord[];
   leaveRequests: LeaveRequest[];
+}
+
+export interface SystemSettings {
+  key: string;
+  startTime: string;
+  endTime: string;
+  updatedBy?: string;
+  updatedAt?: string;
 }

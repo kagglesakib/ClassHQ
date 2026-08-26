@@ -81,22 +81,22 @@ export const CaptainRosterView: React.FC<CaptainRosterViewProps> = ({
     switch (status) {
       case 'approved':
         return (
-          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 inline-flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+          <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200 inline-flex items-center gap-0.5 shadow-2xs">
+            <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />
             Approved
           </span>
         );
       case 'pending':
         return (
-          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-amber-100 text-amber-800 border border-amber-200 inline-flex items-center gap-1">
-            <Clock className="w-3 h-3 text-amber-600 animate-pulse" />
+          <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider rounded-md bg-amber-100 text-amber-800 border border-amber-200 inline-flex items-center gap-0.5 shadow-2xs">
+            <Clock className="w-2.5 h-2.5 text-amber-600 animate-pulse" />
             Pending Approval
           </span>
         );
       case 'rejected':
         return (
-          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-rose-100 text-rose-800 border border-rose-200 inline-flex items-center gap-1">
-            <XCircle className="w-3 h-3 text-rose-600" />
+          <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider rounded-md bg-rose-100 text-rose-800 border border-rose-200 inline-flex items-center gap-0.5 shadow-2xs">
+            <XCircle className="w-2.5 h-2.5 text-rose-600" />
             Declined
           </span>
         );
@@ -108,36 +108,36 @@ export const CaptainRosterView: React.FC<CaptainRosterViewProps> = ({
   const pendingCount = students.filter((s) => s.approval === 'pending').length;
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-2.5 sm:space-y-4">
       {/* Header Bar - Light Blue Theme */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-6 bg-white/90 backdrop-blur-md rounded-3xl border border-sky-200/80 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 sm:p-4 bg-white/90 backdrop-blur-md rounded-2xl border border-sky-200/80 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <h2 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
               Class Students & Onboarding Approvals
             </h2>
             {pendingCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-500 text-white shadow-xs">
+              <span className="px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-amber-500 text-white shadow-2xs">
                 {pendingCount} Pending
               </span>
             )}
           </div>
-          <p className="text-xs font-medium text-slate-500 mt-0.5">
+          <p className="text-[10px] font-medium text-slate-500 mt-0.5">
             Review and certify student accounts for Section {assignedSection} ({assignedBatch}).
           </p>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-1 p-0.5 bg-sky-50 rounded-xl border border-sky-200 w-full sm:w-auto">
           {(['ALL', 'pending', 'approved', 'rejected'] as const).map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st as any)}
-              className={`flex-1 sm:flex-none px-3 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shrink-0 text-center ${
+              className={`flex-1 sm:flex-none px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider transition-all shrink-0 text-center cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-sky-600 text-white shadow-md'
-                  : 'bg-sky-50/80 border border-sky-100 text-slate-600 hover:text-slate-900 hover:bg-sky-100'
+                  ? 'bg-sky-600 text-white shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-sky-100/70'
               }`}
             >
               {st}
@@ -147,72 +147,72 @@ export const CaptainRosterView: React.FC<CaptainRosterViewProps> = ({
       </div>
 
       {actionNotice && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2 shadow-xs">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold flex items-center gap-1.5 shadow-2xs">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
           <span>{actionNotice}</span>
         </div>
       )}
 
       {/* Search Input Bar */}
-      <div className="p-4 sm:p-5 bg-white/90 backdrop-blur-md rounded-3xl border border-sky-200/80 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-        <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+      <div className="p-2.5 sm:p-3 bg-white/90 backdrop-blur-md rounded-2xl border border-sky-200/80 shadow-2xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2">
+        <div className="relative w-full md:w-72">
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2 pointer-events-none" />
           <input
             type="text"
             placeholder="Search student by name, roll, email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs font-medium bg-white border border-sky-200 text-slate-800 placeholder:text-slate-400 rounded-xl focus:outline-hidden focus:border-sky-500"
+            className="w-full pl-8 pr-2.5 py-1 text-[11px] font-medium bg-white border border-sky-200 text-slate-800 placeholder:text-slate-400 rounded-xl focus:outline-hidden focus:border-sky-500"
           />
         </div>
 
-        <div className="text-xs text-slate-500 font-bold text-center md:text-left">
+        <div className="text-[10px] text-slate-500 font-bold text-center md:text-left">
           Total Section Records: <strong className="text-slate-900">{students.length}</strong>
         </div>
       </div>
 
       {/* Directory Cards Grid */}
-      <div className="p-4 sm:p-6 bg-white/90 backdrop-blur-md rounded-3xl border border-sky-200/80 shadow-sm">
+      <div className="p-2.5 sm:p-4 bg-white/90 backdrop-blur-md rounded-2xl border border-sky-200/80 shadow-2xs">
         {loading ? (
-          <div className="py-16 text-center text-xs font-bold text-sky-600 animate-pulse">
+          <div className="py-10 text-center text-[11px] font-bold text-sky-600 animate-pulse">
             Fetching section student records...
           </div>
         ) : students.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
             {students.map((st) => {
               const isSelf = user && (st.id === user.userId || st.email === user.email || (st.rollNumber && st.rollNumber === user.rollNumber));
               return (
                 <div
                   key={st.id}
-                  className={`p-5 rounded-2xl border space-y-4 transition-all shadow-xs ${
+                  className={`p-3 rounded-xl border space-y-2.5 transition-all shadow-2xs ${
                     isSelf
-                      ? 'bg-sky-100/70 border-sky-300 ring-2 ring-sky-400/30'
+                      ? 'bg-sky-100/70 border-sky-300 ring-1 ring-sky-400/30'
                       : st.approval === 'pending'
                       ? 'bg-amber-50/50 border-amber-200 hover:border-amber-300'
                       : 'bg-sky-50/30 border-sky-200/80 hover:border-sky-300'
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-sky-600 text-white font-black text-xs flex items-center justify-center shadow-xs">
+                  <div className="flex items-start justify-between gap-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-sky-600 text-white font-mono font-extrabold text-[10px] sm:text-[11px] flex items-center justify-center shadow-2xs shrink-0">
                         {st.rollNumber}
                       </div>
                       <div>
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <h4 className="text-sm font-black text-slate-900 leading-snug">{st.fullName}</h4>
+                        <div className="flex items-center gap-1 flex-wrap">
+                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">{st.fullName}</h4>
                           {isSelf && (
-                            <span className="px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-sky-600 text-white">
+                            <span className="px-1.5 py-0.2 rounded text-[8px] font-extrabold uppercase tracking-wider bg-sky-600 text-white">
                               You
                             </span>
                           )}
                           {st.role === 'captain' && !isSelf && (
-                            <span className="px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-amber-500 text-white inline-flex items-center gap-0.5 shadow-xs">
+                            <span className="px-1.5 py-0.2 rounded text-[8px] font-extrabold uppercase tracking-wider bg-amber-500 text-white inline-flex items-center gap-0.5 shadow-2xs">
                               <ShieldCheck className="w-2.5 h-2.5" />
                               Co-Captain
                             </span>
                           )}
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-sky-700">
+                        <span className="text-[9px] font-extrabold uppercase tracking-wider text-sky-700">
                           {st.group} Group
                         </span>
                       </div>
@@ -220,28 +220,28 @@ export const CaptainRosterView: React.FC<CaptainRosterViewProps> = ({
                     {getApprovalBadge(st.approval)}
                   </div>
 
-                <div className="space-y-1.5 pt-2 border-t border-sky-100 text-xs text-slate-600">
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                <div className="space-y-1 pt-1.5 border-t border-sky-100 text-[10px] sm:text-[11px] text-slate-600">
+                  <div className="flex items-center gap-1.5">
+                    <Mail className="w-3 h-3 text-sky-600 shrink-0" />
                     <span className="truncate">{st.email}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                  <div className="flex items-center gap-1.5">
+                    <Phone className="w-3 h-3 text-sky-600 shrink-0" />
                     <span>{st.phoneNumber || 'No phone recorded'}</span>
                   </div>
                 </div>
 
                 {/* Actions: Approve / Reject / View Profile */}
-                <div className="pt-2 border-t border-sky-100 flex items-center justify-between gap-2">
+                <div className="pt-1.5 border-t border-sky-100 flex items-center justify-between gap-1.5">
                   {st.approval === 'pending' ? (
-                    <div className="flex items-center gap-1.5 w-full">
+                    <div className="flex items-center gap-1 w-full">
                       <button
                         type="button"
                         onClick={() => handleApprovalAction(st.id, 'approved')}
                         disabled={updatingId === st.id}
-                        className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-1 shadow-xs"
+                        className="flex-1 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-1 shadow-2xs cursor-pointer"
                       >
-                        <UserCheck className="w-3.5 h-3.5" />
+                        <UserCheck className="w-3 h-3" />
                         <span>Approve</span>
                       </button>
                       {st.role !== 'captain' && (
@@ -249,17 +249,18 @@ export const CaptainRosterView: React.FC<CaptainRosterViewProps> = ({
                           type="button"
                           onClick={() => handleApprovalAction(st.id, 'rejected')}
                           disabled={updatingId === st.id}
-                          className="py-1.5 px-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-1 shadow-xs"
+                          className="py-1 px-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider transition-all disabled:opacity-50 flex items-center justify-center gap-1 shadow-2xs cursor-pointer"
+                          title="Reject Student"
                         >
-                          <UserX className="w-3.5 h-3.5" />
+                          <UserX className="w-3 h-3" />
                         </button>
                       )}
                     </div>
                   ) : (
                     <div className="flex items-center justify-between w-full">
                       {st.role === 'captain' ? (
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                          <ShieldCheck className="w-3.5 h-3.5" />
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-0.5">
+                          <ShieldCheck className="w-3 h-3 text-slate-400" />
                           Protected Status
                         </span>
                       ) : (
@@ -269,7 +270,7 @@ export const CaptainRosterView: React.FC<CaptainRosterViewProps> = ({
                             handleApprovalAction(st.id, st.approval === 'approved' ? 'rejected' : 'approved')
                           }
                           disabled={updatingId === st.id}
-                          className="text-[11px] font-bold text-slate-500 hover:text-slate-900 underline"
+                          className="text-[10px] font-bold text-slate-500 hover:text-slate-900 underline cursor-pointer"
                         >
                           {st.approval === 'approved' ? 'Revoke Approval' : 'Approve Student'}
                         </button>
@@ -280,10 +281,10 @@ export const CaptainRosterView: React.FC<CaptainRosterViewProps> = ({
                   <button
                     type="button"
                     onClick={() => onSelectStudentForModal(st)}
-                    className="p-1.5 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-lg transition-colors shrink-0"
+                    className="p-1 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-md transition-colors shrink-0 cursor-pointer"
                     title="View Full Profile Dossier"
                   >
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>

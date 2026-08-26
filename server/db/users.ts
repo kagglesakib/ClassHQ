@@ -4,11 +4,19 @@ import { memoryUsers, isMongoConnected } from './connection';
 import { UserModel } from './models';
 import { formatUserDoc, compareBatch, compareSection, normalizeBatch, normalizeSection } from './helpers';
 
+// In-memory cache for user list to eliminate repeated database roundtrips during roster and ledger loads
+let usersCache: { data: User[]; timestamp: number } | null = null;
+const USERS_CACHE_TTL = 30000; // 30 seconds TTL
+
+export function invalidateUsersCache() {
+  usersCache = null;
+}
+
 export async function findUserByEmail(email: string): Promise<User | null> {
   const normalized = email.trim().toLowerCase();
   if (isMongoConnected) {
     try {
-      const doc = await (UserModel as any).findOne({ email: { $regex: new RegExp(`^${normalized}$`, 'i') } }).lean();
+      const doc = await (UserModel as any).findOne({ email: normalized }).lean();
       if (doc) return formatUserDoc(doc);
     } catch (err) {
       console.error('[DB] findUserByEmail error:', err);
@@ -24,9 +32,10 @@ export async function findUserByRoll(rollNumber: string): Promise<User | null> {
     try {
       const doc = await (UserModel as any).findOne({
         $or: [
+          { rollNumber: normalized },
+          { roll: normalized },
+          { rollNo: normalized },
           { rollNumber: { $regex: new RegExp(`^${normalized}$`, 'i') } },
-          { roll: { $regex: new RegExp(`^${normalized}$`, 'i') } },
-          { rollNo: { $regex: new RegExp(`^${normalized}$`, 'i') } }
         ]
       }).lean();
       if (doc) return formatUserDoc(doc);
@@ -49,8 +58,8 @@ export async function findUserById(id: string): Promise<User | null> {
       const isOid = mongoose.Types.ObjectId.isValid(trimmed) && trimmed.length === 24;
       const orConditions: any[] = [
         { id: trimmed },
-        { email: { $regex: new RegExp(`^${trimmed}$`, 'i') } },
-        { rollNumber: { $regex: new RegExp(`^${trimmed}$`, 'i') } },
+        { email: trimmed.toLowerCase() },
+        { rollNumber: trimmed.toUpperCase() },
       ];
       if (isOid) {
         orConditions.push({ _id: new mongoose.Types.ObjectId(trimmed) });
@@ -71,19 +80,31 @@ export async function findUserById(id: string): Promise<User | null> {
   return user ? formatUserDoc(user) : null;
 }
 
-export async function getAllUsers(): Promise<User[]> {
+export async function getAllUsers(forceRefresh = false): Promise<User[]> {
+  const now = Date.now();
+  if (!forceRefresh && usersCache && now - usersCache.timestamp < USERS_CACHE_TTL) {
+    return usersCache.data;
+  }
+
   if (isMongoConnected) {
     try {
       const docs = await (UserModel as any).find().lean();
-      if (docs && docs.length > 0) return docs.map(formatUserDoc);
+      if (docs && docs.length > 0) {
+        const formatted = docs.map(formatUserDoc);
+        usersCache = { data: formatted, timestamp: now };
+        return formatted;
+      }
     } catch (err) {
       console.error('[DB] getAllUsers error:', err);
     }
   }
-  return memoryUsers.map(formatUserDoc);
+  const mem = memoryUsers.map(formatUserDoc);
+  usersCache = { data: mem, timestamp: now };
+  return mem;
 }
 
 export async function createUser(user: User): Promise<User> {
+  invalidateUsersCache();
   const cleanBatch = normalizeBatch(user.batch) || '2026';
   const cleanAssignedBatch = user.assignedBatch ? normalizeBatch(user.assignedBatch) : undefined;
   const cleanSection = normalizeSection(user.section) || 'A';
@@ -91,6 +112,7 @@ export async function createUser(user: User): Promise<User> {
 
   const dbUser = {
     ...user,
+    email: (user.email || '').trim().toLowerCase(),
     batch: cleanBatch,
     assignedBatch: cleanAssignedBatch,
     section: cleanSection,
@@ -109,6 +131,7 @@ export async function createUser(user: User): Promise<User> {
 }
 
 export async function updateUserApproval(id: string, approval: ApprovalStatus): Promise<User | null> {
+  invalidateUsersCache();
   const trimmed = id.trim();
   let updatedUser: User | null = null;
   const memUser = memoryUsers.find((u) => u.id === trimmed || (u as any)._id === trimmed);
@@ -146,6 +169,7 @@ export async function updateUserRole(
   assignedBatch?: HSCBatch,
   assignedSection?: Section
 ): Promise<User | null> {
+  invalidateUsersCache();
   const trimmed = id.trim();
   let updatedUser: User | null = null;
   const memUser = memoryUsers.find((u) => u.id === trimmed || (u as any)._id === trimmed);
@@ -197,6 +221,7 @@ export async function updateUserSection(
   section: Section,
   batch?: HSCBatch
 ): Promise<User | null> {
+  invalidateUsersCache();
   const trimmed = id.trim();
   const cleanSection = normalizeSection(section) || 'A';
   const cleanBatch = batch ? (normalizeBatch(batch) || '2026') : undefined;
@@ -242,6 +267,7 @@ export async function updateUserSection(
 }
 
 export async function updateUserPassword(id: string, newPassword: string): Promise<User | null> {
+  invalidateUsersCache();
   const trimmed = id.trim();
   let updatedUser: User | null = null;
   const memUser = memoryUsers.find((u) => u.id === trimmed || (u as any)._id === trimmed);

@@ -8,6 +8,8 @@ import { AdminOverviewView } from './components/AdminOverviewView';
 import { AdminStudentsView } from './components/AdminStudentsView';
 import { AdminPendingStudentsView } from './components/AdminPendingStudentsView';
 import { AdminAnalyticsView } from './components/AdminAnalyticsView';
+import { AdminProfileView } from './components/AdminProfileView';
+import { AdminSettingsView } from './components/AdminSettingsView';
 
 export const AdminPortal: React.FC = () => {
   const { user } = useAuth();
@@ -151,6 +153,14 @@ export const AdminPortal: React.FC = () => {
           <Route
             path="/analytics"
             element={<AdminAnalyticsView stats={stats} loading={loading} />}
+          />
+          <Route
+            path="/profile"
+            element={<AdminProfileView />}
+          />
+          <Route
+            path="/settings"
+            element={<AdminSettingsView />}
           />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>

@@ -1031,10 +1031,6 @@ export const StudentLeaveView: React.FC<StudentLeaveViewProps> = ({
                           <p className="text-xs font-bold text-emerald-950 mt-1">
                             Date of Absence:{' '}
                             <span className="font-mono text-emerald-700 font-black">{lv.startDate}</span>
-                            {lv.endDate && lv.endDate !== lv.startDate && (
-                              <span> to <span className="font-mono text-emerald-700 font-black">{lv.endDate}</span></span>
-                            )}
-                            <span className="text-slate-400 font-normal ml-1">({lv.daysCount || 1} Day)</span>
                           </p>
                         </div>
                       </div>
@@ -1064,13 +1060,19 @@ export const StudentLeaveView: React.FC<StudentLeaveViewProps> = ({
                     </div>
 
                     {/* Bottom: Captain Review Certificate Box or Pending Status */}
-                    {lv.reviewedBy ? (
+                    {lv.reviewedBy || lv.status === 'Approved' || lv.status === 'Rejected' || lv.captainsNote || lv.reviewNote ? (
                       <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50/60 border border-emerald-200/80 flex items-start gap-2.5 sm:gap-3 text-xs text-emerald-950">
                         <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0 mt-0.5" />
                         <div className="flex-1 space-y-1 min-w-0">
                           <div className="flex items-center justify-between gap-2 flex-wrap">
                             <span className="font-black text-emerald-950 truncate">
-                              Reviewed & Certified by {lv.reviewedBy.name} ({lv.reviewedBy.role})
+                              Reviewed & Certified by {
+                                typeof lv.reviewedBy === 'object' && lv.reviewedBy?.name
+                                  ? `${lv.reviewedBy.name} (${lv.reviewedBy.role || 'captain'})`
+                                  : typeof lv.reviewedBy === 'string'
+                                  ? lv.reviewedBy
+                                  : 'Section Captain'
+                              }
                             </span>
                             {lv.reviewedAt && (
                               <span className="text-[10px] font-mono text-emerald-700 font-bold shrink-0">
@@ -1079,8 +1081,8 @@ export const StudentLeaveView: React.FC<StudentLeaveViewProps> = ({
                             )}
                           </div>
                           <p className="text-slate-700 font-medium break-words">
-                            <strong className="text-emerald-900">Remarks:</strong>{' '}
-                            {lv.reviewNote || 'Approved and certified for official attendance excuse.'}
+                            <strong className="text-emerald-900">Captain's Note:</strong>{' '}
+                            "{lv.reviewNote || lv.captainsNote || (lv as any).reviewerNote || 'Approved and certified for official attendance excuse.'}"
                           </p>
                         </div>
                       </div>

@@ -575,7 +575,7 @@ export const AdminUserProfileModal: React.FC<AdminUserProfileModalProps> = ({
                                 {lv.leaveType} Leave
                               </span>
                               <span className="font-mono text-xs font-bold text-slate-900">
-                                {lv.startDate} to {lv.endDate} ({lv.daysCount} days)
+                                {lv.startDate}
                               </span>
                             </div>
 
@@ -594,10 +594,15 @@ export const AdminUserProfileModal: React.FC<AdminUserProfileModalProps> = ({
                             <strong className="text-slate-900">Reason:</strong> {lv.reason}
                           </p>
 
-                          {lv.reviewedBy && (
-                            <div className="pt-2 border-t border-rose-100 text-[11px] text-slate-500 flex items-center justify-between">
-                              <span>Reviewed by: <strong>{lv.reviewedBy.name}</strong> ({lv.reviewedBy.role})</span>
-                              {lv.reviewNote && <span className="italic">"{lv.reviewNote}"</span>}
+                          {(lv.reviewedBy || lv.reviewNote || lv.captainsNote) && (
+                            <div className="pt-2 border-t border-rose-100 text-[11px] text-slate-500 flex items-center justify-between flex-wrap gap-1">
+                              {lv.reviewedBy && (
+                                <span>
+                                  Reviewed by: <strong>{typeof lv.reviewedBy === 'object' && lv.reviewedBy?.name ? lv.reviewedBy.name : typeof lv.reviewedBy === 'string' ? lv.reviewedBy : 'Section Captain'}</strong>{' '}
+                                  ({typeof lv.reviewedBy === 'object' && lv.reviewedBy?.role ? lv.reviewedBy.role : 'captain'})
+                                </span>
+                              )}
+                              {(lv.reviewNote || lv.captainsNote) && <span className="italic font-medium text-slate-700">"{lv.reviewNote || lv.captainsNote}"</span>}
                             </div>
                           )}
                         </div>
