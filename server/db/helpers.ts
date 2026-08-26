@@ -1,4 +1,4 @@
-import { User, AttendanceRecord, AttendanceStatus, LeaveRequest, LeaveStatus, LeaveType } from '../../src/types';
+import { User, AttendanceRecord, AttendanceStatus, LeaveRequest, LeaveStatus, LeaveType } from '../../src/types.ts';
 
 export function normalizeBatch(batch?: string | null): string {
   if (!batch) return '';

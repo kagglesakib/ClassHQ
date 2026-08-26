@@ -1,5 +1,5 @@
-import { SystemSettingsModel } from './models';
-import { isMongoConnected } from './connection';
+import { SystemSettingsModel } from './models.ts';
+import { isMongoConnected } from './connection.ts';
 
 let memorySettings = {
   key: 'global_settings',

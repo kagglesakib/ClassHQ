@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthSessionPayload, UserRole } from '../src/types';
-import { findUserById, findUserByEmail, findUserByRoll } from './db';
+import { AuthSessionPayload, UserRole } from '../src/types.ts';
+import { findUserById, findUserByEmail, findUserByRoll } from './db/index.ts';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'classhq_secure_session_secret_key_2026';
 export const SESSION_EXPIRY_SECONDS = 3 * 60 * 60; // 3 hours in seconds

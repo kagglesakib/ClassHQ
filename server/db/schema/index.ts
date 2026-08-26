@@ -1,3 +1,3 @@
-export * from './user.schema';
-export * from './attendance.schema';
-export * from './settings.schema';
+export * from './user.schema.ts';
+export * from './attendance.schema.ts';
+export * from './settings.schema.ts';

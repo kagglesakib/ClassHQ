@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import { User, ApprovalStatus, UserRole, HSCBatch, Section } from '../../src/types';
-import { memoryUsers, isMongoConnected } from './connection';
-import { UserModel } from './models';
-import { formatUserDoc, compareBatch, compareSection, normalizeBatch, normalizeSection } from './helpers';
+import { User, ApprovalStatus, UserRole, HSCBatch, Section } from '../../src/types.ts';
+import { memoryUsers, isMongoConnected } from './connection.ts';
+import { UserModel } from './models.ts';
+import { formatUserDoc, compareBatch, compareSection, normalizeBatch, normalizeSection } from './helpers.ts';
 
 // In-memory cache for user list to eliminate repeated database roundtrips during roster and ledger loads
 let usersCache: { data: User[]; timestamp: number } | null = null;

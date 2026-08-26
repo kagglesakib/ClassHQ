@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { LeaveRequest, LeaveStatus, LeaveType, UserRole } from '../../src/types';
-import { memoryAttendance, isMongoConnected } from './connection';
-import { AttendanceModel } from './models';
-import { getAllUsers } from './users';
-import { formatLeaveDoc, compareBatch, compareSection } from './helpers';
+import { LeaveRequest, LeaveStatus, LeaveType, UserRole } from '../../src/types.ts';
+import { memoryAttendance, isMongoConnected } from './connection.ts';
+import { AttendanceModel } from './models.ts';
+import { getAllUsers } from './users.ts';
+import { formatLeaveDoc, compareBatch, compareSection } from './helpers.ts';
 
 function buildLeaveMongoQuery(id: string) {
   const orConditions: any[] = [{ id: id }, { id: id.toLowerCase() }];

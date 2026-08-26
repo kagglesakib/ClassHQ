@@ -1,8 +1,8 @@
-import { AttendanceRecord } from '../../src/types';
-import { memoryAttendance, isMongoConnected } from './connection';
-import { AttendanceModel } from './models';
-import { getAllUsers } from './users';
-import { formatAttendanceDoc, compareBatch, compareSection } from './helpers';
+import { AttendanceRecord } from '../../src/types.ts';
+import { memoryAttendance, isMongoConnected } from './connection.ts';
+import { AttendanceModel } from './models.ts';
+import { getAllUsers } from './users.ts';
+import { formatAttendanceDoc, compareBatch, compareSection } from './helpers.ts';
 
 let lastAutoMarkTime = 0;
 const AUTO_MARK_INTERVAL = 3 * 60 * 1000; // 3 minutes throttle

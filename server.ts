@@ -37,14 +37,14 @@ import {
   normalizeSection,
   getSystemSettingsDB,
   updateSystemSettingsDB,
-} from './server/db';
+} from './server/db/index.ts';
 import {
   generateToken,
   authMiddleware,
   requireAuth,
   requireRoles,
   AuthenticatedRequest,
-} from './server/auth';
+} from './server/auth.ts';
 import {
   User,
   UserRole,
@@ -56,7 +56,7 @@ import {
   LeaveRequest,
   LeaveType,
   AttendanceStatus,
-} from './src/types';
+} from './src/types.ts';
 
 dotenv.config();
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { User, AttendanceRecord, LeaveRequest } from '../../src/types';
-import { UserModel, AttendanceModel } from './models';
+import { User, AttendanceRecord, LeaveRequest } from '../../src/types.ts';
+import { UserModel, AttendanceModel } from './models.ts';
 
 // Default initial accounts for seamless out-of-the-box operation and demo testing
 export const initialDefaultUsers: User[] = [
