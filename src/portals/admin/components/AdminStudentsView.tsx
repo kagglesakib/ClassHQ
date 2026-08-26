@@ -168,22 +168,22 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
     switch (approval) {
       case 'approved':
         return (
-          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 inline-flex items-center gap-1 shadow-2xs">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+          <span className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200 inline-flex items-center gap-0.5 shadow-2xs shrink-0">
+            <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-600" />
             Approved
           </span>
         );
       case 'pending':
         return (
-          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-amber-100 text-amber-800 border border-amber-200 inline-flex items-center gap-1 shadow-2xs">
-            <Clock className="w-3 h-3 text-amber-600" />
+          <span className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-amber-100 text-amber-800 border border-amber-200 inline-flex items-center gap-0.5 shadow-2xs shrink-0">
+            <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-600" />
             Pending
           </span>
         );
       case 'rejected':
         return (
-          <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-rose-100 text-rose-800 border border-rose-200 inline-flex items-center gap-1 shadow-2xs">
-            <XCircle className="w-3 h-3 text-rose-600" />
+          <span className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-rose-100 text-rose-800 border border-rose-200 inline-flex items-center gap-0.5 shadow-2xs shrink-0">
+            <XCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-rose-600" />
             Rejected
           </span>
         );
@@ -195,45 +195,45 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
   const getRoleBadge = (user: User) => {
     if (user.role === 'captain') {
       return (
-        <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-blue-100 text-blue-800 border border-blue-200 inline-flex items-center gap-1 shadow-2xs">
-          <ShieldAlert className="w-3 h-3 text-blue-600" />
-          Class Captain
+        <span className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-blue-100 text-blue-800 border border-blue-200 inline-flex items-center gap-0.5 shadow-2xs shrink-0">
+          <ShieldAlert className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-600" />
+          Captain
         </span>
       );
     }
     if (user.role === 'student') {
       return (
-        <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200 inline-flex items-center gap-1 shadow-2xs">
-          <GraduationCap className="w-3 h-3 text-emerald-600" />
+        <span className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200 inline-flex items-center gap-0.5 shadow-2xs shrink-0">
+          <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-600" />
           Student
         </span>
       );
     }
     return (
-      <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg bg-rose-100 text-rose-800 border border-rose-200 inline-flex items-center gap-1 shadow-2xs">
-        <Building2 className="w-3 h-3 text-rose-600" />
+      <span className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-rose-100 text-rose-800 border border-rose-200 inline-flex items-center gap-0.5 shadow-2xs shrink-0">
+        <Building2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-rose-600" />
         Admin
       </span>
     );
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header and Controls - Light Red Theme */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-white/90 backdrop-blur-md rounded-3xl border border-rose-200/80 shadow-sm">
-        <div>
-          <h2 className="text-xl font-black text-slate-900 tracking-tight">Institutional Directory & Role Governance</h2>
-          <p className="text-xs font-medium text-slate-500 mt-0.5">
+    <div className="max-w-4xl mx-auto space-y-2.5 sm:space-y-3.5">
+      {/* Header and Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 p-3 sm:p-4 bg-white/90 backdrop-blur-md rounded-2xl border border-rose-200/80 shadow-2xs">
+        <div className="space-y-0.5">
+          <h2 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">Institutional Directory & Role Governance</h2>
+          <p className="text-[10px] sm:text-[11px] font-medium text-slate-500">
             View profiles, audit student records, and promote or demote Class Captains across sections.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
           <button
             type="button"
             onClick={onRefresh}
             disabled={loading}
-            className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-black uppercase tracking-wider rounded-xl transition-all border border-rose-200 flex items-center gap-1.5 shadow-2xs"
+            className="h-8 px-2.5 sm:px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider rounded-xl transition-all border border-rose-200 flex items-center gap-1.5 shadow-2xs cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Sync</span>
@@ -242,24 +242,24 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
       </div>
 
       {/* Quick Stat Summary Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
         <button
           type="button"
           onClick={() => {
             setRoleFilter('All');
             setApprovalFilter('All');
           }}
-          className={`p-4 rounded-2xl border text-left transition-all ${
+          className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${
             roleFilter === 'All'
               ? 'bg-rose-600 text-white border-rose-600 shadow-md shadow-rose-200 ring-1 ring-rose-500'
               : 'bg-white border-rose-200/80 hover:border-rose-300 text-slate-700 shadow-2xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className={`text-[10px] font-black uppercase tracking-widest ${roleFilter === 'All' ? 'text-rose-100' : 'text-slate-500'}`}>Approved Roster</span>
-            <Users className={`w-4 h-4 ${roleFilter === 'All' ? 'text-white' : 'text-rose-500'}`} />
+            <span className={`text-[9px] font-extrabold uppercase tracking-wider ${roleFilter === 'All' ? 'text-rose-100' : 'text-slate-500'}`}>Approved Roster</span>
+            <Users className={`w-3.5 h-3.5 ${roleFilter === 'All' ? 'text-white' : 'text-rose-500'}`} />
           </div>
-          <span className={`text-2xl font-black block mt-1 ${roleFilter === 'All' ? 'text-white' : 'text-slate-900'}`}>{totalApprovedCount}</span>
+          <span className={`text-base sm:text-lg font-black block mt-0.5 ${roleFilter === 'All' ? 'text-white' : 'text-slate-900'}`}>{totalApprovedCount}</span>
         </button>
 
         <button
@@ -268,17 +268,17 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
             setRoleFilter('captain');
             setApprovalFilter('All');
           }}
-          className={`p-4 rounded-2xl border text-left transition-all ${
+          className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${
             roleFilter === 'captain'
               ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-200 ring-1 ring-blue-500'
               : 'bg-white border-rose-200/80 hover:border-blue-300 text-slate-700 shadow-2xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className={`text-[10px] font-black uppercase tracking-widest ${roleFilter === 'captain' ? 'text-blue-100' : 'text-blue-600'}`}>Class Captains</span>
-            <ShieldAlert className={`w-4 h-4 ${roleFilter === 'captain' ? 'text-white' : 'text-blue-500'}`} />
+            <span className={`text-[9px] font-extrabold uppercase tracking-wider ${roleFilter === 'captain' ? 'text-blue-100' : 'text-blue-600'}`}>Captains</span>
+            <ShieldAlert className={`w-3.5 h-3.5 ${roleFilter === 'captain' ? 'text-white' : 'text-blue-500'}`} />
           </div>
-          <span className={`text-2xl font-black block mt-1 ${roleFilter === 'captain' ? 'text-white' : 'text-slate-900'}`}>{captainCount}</span>
+          <span className={`text-base sm:text-lg font-black block mt-0.5 ${roleFilter === 'captain' ? 'text-white' : 'text-slate-900'}`}>{captainCount}</span>
         </button>
 
         <button
@@ -287,58 +287,58 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
             setRoleFilter('student');
             setApprovalFilter('approved');
           }}
-          className={`p-4 rounded-2xl border text-left transition-all ${
+          className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${
             roleFilter === 'student'
               ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-200 ring-1 ring-emerald-500'
               : 'bg-white border-rose-200/80 hover:border-emerald-300 text-slate-700 shadow-2xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className={`text-[10px] font-black uppercase tracking-widest ${roleFilter === 'student' ? 'text-emerald-100' : 'text-emerald-600'}`}>Approved Students</span>
-            <GraduationCap className={`w-4 h-4 ${roleFilter === 'student' ? 'text-white' : 'text-emerald-500'}`} />
+            <span className={`text-[9px] font-extrabold uppercase tracking-wider ${roleFilter === 'student' ? 'text-emerald-100' : 'text-emerald-600'}`}>Students</span>
+            <GraduationCap className={`w-3.5 h-3.5 ${roleFilter === 'student' ? 'text-white' : 'text-emerald-500'}`} />
           </div>
-          <span className={`text-2xl font-black block mt-1 ${roleFilter === 'student' ? 'text-white' : 'text-slate-900'}`}>{approvedStudentCount}</span>
+          <span className={`text-base sm:text-lg font-black block mt-0.5 ${roleFilter === 'student' ? 'text-white' : 'text-slate-900'}`}>{approvedStudentCount}</span>
         </button>
 
         <Link
           to="/admin/pending-students"
-          className="p-4 rounded-2xl border text-left transition-all bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-200 hover:bg-amber-600 cursor-pointer block"
+          className="p-2.5 sm:p-3 rounded-xl border text-left transition-all bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-200 hover:bg-amber-600 cursor-pointer block"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-widest text-amber-100">Pending Requests</span>
-            <Clock className="w-4 h-4 text-white animate-pulse" />
+            <span className="text-[9px] font-extrabold uppercase tracking-wider text-amber-100">Pending</span>
+            <Clock className="w-3.5 h-3.5 text-white animate-pulse" />
           </div>
-          <span className="text-2xl font-black block mt-1 text-white">{pendingCount}</span>
+          <span className="text-base sm:text-lg font-black block mt-0.5 text-white">{pendingCount}</span>
         </Link>
       </div>
 
       {actionNotice && (
-        <div className={`p-4 rounded-2xl text-xs font-bold flex items-center gap-2 shadow-xs ${
+        <div className={`p-2.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 shadow-2xs ${
           actionNotice.type === 'success'
             ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
             : 'bg-rose-50 border border-rose-200 text-rose-800'
         }`}>
           {actionNotice.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
           ) : (
-            <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
           )}
           <span>{actionNotice.text}</span>
         </div>
       )}
 
       {/* APPROVED STUDENTS & CAPTAINS ROSTER TABLE */}
-      <div className="p-6 bg-white/90 backdrop-blur-md rounded-3xl border border-rose-200/80 shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-rose-100 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-rose-600 text-white shadow-xs">
-              <Users className="w-5 h-5" />
+      <div className="p-3 sm:p-4 bg-white/90 backdrop-blur-md rounded-2xl border border-rose-200/80 shadow-2xs space-y-2.5 sm:space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-rose-100 pb-2.5">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-xl bg-rose-600 text-white shadow-2xs">
+              <Users className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-black text-slate-900 tracking-tight">
+              <h3 className="text-xs sm:text-sm font-black text-slate-900 tracking-tight">
                 Approved Accounts & Roster Directory
               </h3>
-              <p className="text-xs font-medium text-slate-500">
+              <p className="text-[10px] sm:text-[11px] font-medium text-slate-500">
                 Official institutional roster of active students and Class Captains across sections.
               </p>
             </div>
@@ -346,16 +346,16 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
         </div>
 
         {/* Directory Controls */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
           {/* Search */}
           <div className="relative lg:col-span-2">
-            <Search className="w-4 h-4 text-rose-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-rose-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by student name, roll number, or email..."
+              placeholder="Search name, roll, or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-rose-50/50 border border-rose-200 rounded-2xl text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+              className="w-full h-8.5 pl-8 pr-3 bg-rose-50/50 border border-rose-200 rounded-xl text-[11px] font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
             />
           </div>
 
@@ -364,7 +364,7 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
             <select
               value={batchFilter}
               onChange={(e) => setBatchFilter(e.target.value)}
-              className="w-full px-3 py-2.5 bg-rose-50/50 border border-rose-200 rounded-2xl text-xs font-bold text-slate-800 focus:outline-none focus:border-rose-500"
+              className="w-full h-8.5 px-2.5 bg-rose-50/50 border border-rose-200 rounded-xl text-[11px] font-bold text-slate-800 focus:outline-none focus:border-rose-500 cursor-pointer"
             >
               <option value="All">All HSC Batches</option>
               <option value="HSC 2024">HSC 2024</option>
@@ -382,7 +382,7 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
             <select
               value={sectionFilter}
               onChange={(e) => setSectionFilter(e.target.value)}
-              className="w-full px-3 py-2.5 bg-rose-50/50 border border-rose-200 rounded-2xl text-xs font-bold text-slate-800 focus:outline-none focus:border-rose-500"
+              className="w-full h-8.5 px-2.5 bg-rose-50/50 border border-rose-200 rounded-xl text-[11px] font-bold text-slate-800 focus:outline-none focus:border-rose-500 cursor-pointer"
             >
               <option value="All">All Sections (A-I)</option>
               {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].map((sec) => (
@@ -397,38 +397,38 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
         {/* Directory Cards (Stacked Vertical Blocks) */}
         <div>
           {loading ? (
-            <div className="py-16 text-center text-xs font-bold text-rose-600 animate-pulse flex flex-col items-center justify-center gap-2">
-              <RefreshCw className="w-5 h-5 animate-spin text-rose-500" />
+            <div className="py-8 text-center text-[11px] font-bold text-rose-600 animate-pulse flex flex-col items-center justify-center gap-1.5">
+              <RefreshCw className="w-4 h-4 animate-spin text-rose-500" />
               <span>Querying institutional directory and role profiles...</span>
             </div>
           ) : approvedDirectoryList.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {approvedDirectoryList.map((st, index) => (
                 <div
                   key={st.id ? `st-${st.id}-${index}` : `st-idx-${index}`}
-                  className="p-4 bg-white rounded-2xl border border-rose-200/80 hover:border-rose-300 shadow-2xs hover:shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+                  className="p-2.5 sm:p-3 bg-white rounded-xl border border-rose-200/80 hover:border-rose-300 shadow-2xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 group"
                 >
                   {/* Left: User Avatar & Identity Info */}
-                  <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-xs shadow-2xs shrink-0 ${
+                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                    <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center font-black text-[11px] shadow-2xs shrink-0 ${
                       st.role === 'captain'
-                        ? 'bg-blue-600 text-white ring-2 ring-blue-100'
+                        ? 'bg-blue-600 text-white ring-1 ring-blue-100'
                         : st.role === 'admin'
-                        ? 'bg-rose-600 text-white ring-2 ring-rose-100'
-                        : 'bg-emerald-600 text-white ring-2 ring-emerald-100'
+                        ? 'bg-rose-600 text-white ring-1 ring-rose-100'
+                        : 'bg-emerald-600 text-white ring-1 ring-emerald-100'
                     }`}>
                       {st.rollNumber || (st.fullName ? st.fullName.charAt(0) : 'U')}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <span className="font-black text-slate-900 text-sm group-hover:text-rose-700 transition-colors">
+                      <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+                        <span className="font-black text-slate-900 text-xs sm:text-[13px] group-hover:text-rose-700 transition-colors truncate">
                           {st.fullName}
                         </span>
                         {getRoleBadge(st)}
                         {getApprovalBadge(st.approval)}
                       </div>
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 font-medium mt-0.5">
-                        <span className="inline-flex items-center gap-1 text-slate-600 truncate">
+                      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                        <span className="inline-flex items-center gap-1 text-slate-600 truncate max-w-[160px] sm:max-w-[200px]">
                           <Mail className="w-3 h-3 text-rose-500/70 shrink-0" />
                           <span className="truncate">{st.email}</span>
                         </span>
@@ -439,11 +439,11 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
                           </span>
                         )}
                         <span className="inline-flex items-center gap-1 text-slate-800 font-bold">
-                          <GraduationCap className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                          <GraduationCap className="w-3 h-3 text-rose-600 shrink-0" />
                           <span>Batch {st.batch}</span>
                         </span>
                         <span className="inline-flex items-center gap-1 text-rose-900 font-bold">
-                          <BookOpen className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                          <BookOpen className="w-3 h-3 text-rose-600 shrink-0" />
                           <span>Sec {st.section}</span>
                         </span>
                         {st.group && (
@@ -457,15 +457,15 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex items-center gap-2 shrink-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-rose-100 justify-end">
+                  <div className="flex items-center gap-1.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-rose-100 justify-end">
                     <button
                       type="button"
                       onClick={() => setSelectedUserForProfile(st)}
-                      className="px-2.5 sm:px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-black text-xs uppercase tracking-wider inline-flex items-center gap-1.5 transition-all shadow-2xs"
+                      className="h-7.5 sm:h-8 px-2 sm:px-2.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-extrabold text-[10px] sm:text-[11px] uppercase tracking-wider inline-flex items-center gap-1 transition-all shadow-2xs cursor-pointer"
                       title="View Student Dossier"
                     >
-                      <Eye className="w-4 h-4 text-rose-600 shrink-0" />
-                      <span className="hidden xs:inline">Profile</span>
+                      <Eye className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+                      <span>Profile</span>
                     </button>
 
                     {st.role === 'student' && st.approval === 'approved' && (
@@ -475,26 +475,26 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
                             type="button"
                             onClick={() => setConfirmPromoteId(st.id)}
                             disabled={updatingId === st.id}
-                            className="px-2.5 sm:px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-black text-xs uppercase tracking-wider inline-flex items-center gap-1.5 transition-all shadow-2xs"
+                            className="h-7.5 sm:h-8 px-2 sm:px-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-extrabold text-[10px] sm:text-[11px] uppercase tracking-wider inline-flex items-center gap-1 transition-all shadow-2xs cursor-pointer"
                             title="Promote this student to Class Captain"
                           >
-                            <ShieldAlert className="w-4 h-4 text-blue-600 shrink-0" />
-                            <span className="hidden xs:inline">Promote</span>
+                            <ShieldAlert className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                            <span>Promote</span>
                           </button>
                         ) : (
-                          <div className="flex items-center gap-1.5 bg-blue-50 p-1 rounded-xl border border-blue-200">
+                          <div className="flex items-center gap-1 bg-blue-50 p-0.5 rounded-lg border border-blue-200">
                             <button
                               type="button"
                               onClick={() => handleRoleToggle(st, 'captain')}
                               disabled={updatingId === st.id}
-                              className="px-2.5 py-1 bg-emerald-600 text-white rounded-lg text-[10px] font-black uppercase"
+                              className="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[9px] sm:text-[10px] font-extrabold uppercase cursor-pointer"
                             >
                               Confirm
                             </button>
                             <button
                               type="button"
                               onClick={() => setConfirmPromoteId(null)}
-                              className="px-2 py-1 bg-slate-200 text-slate-700 rounded-lg text-[10px] font-bold"
+                              className="px-1.5 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[9px] sm:text-[10px] font-bold cursor-pointer"
                             >
                               Cancel
                             </button>
@@ -510,26 +510,26 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
                             type="button"
                             onClick={() => setConfirmDemoteId(st.id)}
                             disabled={updatingId === st.id}
-                            className="px-2.5 sm:px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-black text-xs uppercase tracking-wider inline-flex items-center gap-1.5 transition-all shadow-2xs"
+                            className="h-7.5 sm:h-8 px-2 sm:px-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-extrabold text-[10px] sm:text-[11px] uppercase tracking-wider inline-flex items-center gap-1 transition-all shadow-2xs cursor-pointer"
                             title="Demote Class Captain to regular student"
                           >
-                            <UserMinus className="w-4 h-4 text-amber-700 shrink-0" />
-                            <span className="hidden xs:inline">Demote</span>
+                            <UserMinus className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                            <span>Demote</span>
                           </button>
                         ) : (
-                          <div className="flex items-center gap-1.5 bg-rose-50 p-1 rounded-xl border border-rose-200">
+                          <div className="flex items-center gap-1 bg-rose-50 p-0.5 rounded-lg border border-rose-200">
                             <button
                               type="button"
                               onClick={() => handleRoleToggle(st, 'student')}
                               disabled={updatingId === st.id}
-                              className="px-2.5 py-1 bg-rose-600 text-white rounded-lg text-[10px] font-black uppercase"
+                              className="px-2 py-0.5 bg-rose-600 hover:bg-rose-700 text-white rounded text-[9px] sm:text-[10px] font-extrabold uppercase cursor-pointer"
                             >
                               Demote
                             </button>
                             <button
                               type="button"
                               onClick={() => setConfirmDemoteId(null)}
-                              className="px-2 py-1 bg-slate-200 text-slate-700 rounded-lg text-[10px] font-bold"
+                              className="px-1.5 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[9px] sm:text-[10px] font-bold cursor-pointer"
                             >
                               Cancel
                             </button>
@@ -542,10 +542,10 @@ export const AdminStudentsView: React.FC<AdminStudentsViewProps> = ({
                       type="button"
                       onClick={() => handleApproval(st.id, 'rejected')}
                       disabled={updatingId === st.id}
-                      className="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition-colors border border-transparent hover:border-rose-200"
+                      className="h-7.5 sm:h-8 w-7.5 sm:w-8 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200 inline-flex items-center justify-center cursor-pointer"
                       title="Revoke Approval"
                     >
-                      <XCircle className="w-4 h-4" />
+                      <XCircle className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>

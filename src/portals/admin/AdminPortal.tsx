@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 import { AdminOverviewStats, User, ApprovalStatus } from '../../types';
 import { AdminNavbar } from './components/AdminNavbar';
-import { AdminOverviewView } from './components/AdminOverviewView';
 import { AdminStudentsView } from './components/AdminStudentsView';
 import { AdminPendingStudentsView } from './components/AdminPendingStudentsView';
 import { AdminAnalyticsView } from './components/AdminAnalyticsView';
@@ -98,32 +97,8 @@ export const AdminPortal: React.FC = () => {
         )}
 
         <Routes>
-          <Route
-            path="/"
-            element={
-              <AdminOverviewView
-                stats={stats}
-                loading={loading}
-                students={students}
-                onUpdateSection={handleUpdateUserSection}
-                onUpdateRole={handleUpdateUserRole}
-                onRefresh={fetchAdminData}
-              />
-            }
-          />
-          <Route
-            path="/overview"
-            element={
-              <AdminOverviewView
-                stats={stats}
-                loading={loading}
-                students={students}
-                onUpdateSection={handleUpdateUserSection}
-                onUpdateRole={handleUpdateUserRole}
-                onRefresh={fetchAdminData}
-              />
-            }
-          />
+          <Route path="/" element={<Navigate to="/admin/students" replace />} />
+          <Route path="/overview" element={<Navigate to="/admin/students" replace />} />
           <Route
             path="/students"
             element={
@@ -162,7 +137,7 @@ export const AdminPortal: React.FC = () => {
             path="/settings"
             element={<AdminSettingsView />}
           />
-          <Route path="*" element={<Navigate to="/admin" replace />} />
+          <Route path="*" element={<Navigate to="/admin/students" replace />} />
         </Routes>
       </main>
     </div>

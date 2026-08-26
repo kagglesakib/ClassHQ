@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Building2, 
-  LayoutDashboard, 
   Users, 
   Clock,
   LogOut,
@@ -23,7 +22,6 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
   const location = useLocation();
 
   const navItems = [
-    { path: '/admin', label: 'Institutional Overview', mobileLabel: 'Overview', icon: LayoutDashboard, exact: true },
     { path: '/admin/students', label: 'Approved Students', mobileLabel: 'Students', icon: Users, exact: true },
     { path: '/admin/pending-students', label: 'Pending Approvals', mobileLabel: 'Pending', icon: Clock, badge: pendingStudentsCount },
     { path: '/admin/profile', label: 'My Profile & Security', mobileLabel: 'Profile', icon: ShieldCheck },
@@ -31,8 +29,8 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
 
   const isActive = (path: string, exact?: boolean) => {
     if (exact) {
-      if (path === '/admin') {
-        return location.pathname === '/admin' || location.pathname === '/admin/' || location.pathname === '/admin/overview';
+      if (path === '/admin/students') {
+        return location.pathname === '/admin/students' || location.pathname === '/admin' || location.pathname === '/admin/' || location.pathname === '/admin/overview';
       }
       return location.pathname === path;
     }
@@ -134,7 +132,7 @@ export const AdminNavbar: React.FC<AdminNavbarProps> = ({
 
         {/* Mobile & Tablet Full-Width Segmented Tab Control (xl:hidden) */}
         <div className="pb-2.5 pt-0.5 xl:hidden">
-          <div className="grid grid-cols-4 gap-1 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 shadow-inner">
+          <div className="grid grid-cols-3 gap-1 p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 shadow-inner">
             {navItems.map((item) => {
               const active = isActive(item.path, item.exact);
               const Icon = item.icon;
