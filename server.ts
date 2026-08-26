@@ -75,8 +75,14 @@ app.use(authMiddleware);
 
 // Middleware to ensure DB connection on serverless cold starts
 app.use(async (req, res, next) => {
-  if (!isMongoConnected && !isConnecting) {
-    initMongoDB().catch((err) => console.error('[ClassHQ] MongoDB init error:', err));
+  if (process.env.MONGO_URI || process.env.MONGODB_URI) {
+    if (!isMongoConnected) {
+      try {
+        await initMongoDB();
+      } catch (err) {
+        console.error('[ClassHQ] MongoDB cold start connect error:', err);
+      }
+    }
   }
   next();
 });
