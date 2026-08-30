@@ -1,1 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* Custom Visual Polish & Ambient Background Glows */
+body {
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.04) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(16, 185, 129, 0.04) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(245, 158, 11, 0.03) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Custom visual additions for high-end scrollbars and details */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Glassmorphism & High-contrast card utilities */
+.glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.glass-card-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -4px rgba(99, 102, 241, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  border-color: rgba(199, 210, 254, 0.9);
+}
+
+/* Glowing Aesthetic Animations & Gradient Effects */
+@keyframes glow-pulse-indigo {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.25), inset 0 0 10px rgba(99, 102, 241, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.45), inset 0 0 15px rgba(99, 102, 241, 0.2);
+  }
+}
+
+@keyframes glow-pulse-emerald {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.25), inset 0 0 10px rgba(16, 185, 129, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.45), inset 0 0 15px rgba(16, 185, 129, 0.2);
+  }
+}
+
+@keyframes glow-pulse-amber {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.45);
+  }
+}
+
+@keyframes glow-pulse-purple {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.25), inset 0 0 10px rgba(168, 85, 247, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.45), inset 0 0 15px rgba(168, 85, 247, 0.2);
+  }
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-glow-indigo {
+  animation: glow-pulse-indigo 3s ease-in-out infinite;
+}
+
+.animate-glow-emerald {
+  animation: glow-pulse-emerald 3s ease-in-out infinite;
+}
+
+.animate-glow-amber {
+  animation: glow-pulse-amber 3s ease-in-out infinite;
+}
+
+.animate-glow-purple {
+  animation: glow-pulse-purple 3s ease-in-out infinite;
+}
+
+.animate-gradient-bg {
+  background-size: 200% 200%;
+  animation: gradient-flow 6s ease infinite;
+}
+
+/* Pulse indicator dot */
+.pulse-dot {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

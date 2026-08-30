@@ -1,179 +1,182 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { AuthSessionPayload, UserRole } from '../types';
-import { api, getStoredToken, setStoredToken } from '../lib/api';
+'use client';
 
-export interface PendingNotice {
-  message: string;
-  user?: {
-    fullName?: string;
-    rollNumber?: string;
-    batch?: string;
-    section?: string;
-    email?: string;
-  };
-  submittedAt?: string;
-}
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { Loader2 } from 'lucide-react';
+import StudentPortalView from '../components/student/StudentPortalView';
+import { LoginForm, PendingApprovalCard } from '../components/auth/LoginForm';
+import { AuthUser } from '../types';
+
+export type { AuthUser };
 
 interface AuthContextType {
-  user: AuthSessionPayload | null;
-  loading: boolean;
-  login: (emailOrRoll: string, password: string) => Promise<{ success: boolean; isPending?: boolean; error?: string }>;
-  quickLogin: (role?: UserRole, email?: string) => Promise<void>;
-  registerStudent: (formData: any) => Promise<{ success: boolean; message?: string; error?: string }>;
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  expiresAt: number | null;
+  timeLeftMs: number;
+  login: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
-  pendingNotice: PendingNotice | null;
-  clearPendingNotice: () => void;
+  checkSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AuthSessionPayload | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [pendingNotice, setPendingNotice] = useState<PendingNotice | null>(null);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
+  const [timeLeftMs, setTimeLeftMs] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const refreshUser = useCallback(async () => {
-    const token = getStoredToken();
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-
+  // Check current session from API or localStorage backup
+  const checkSession = useCallback(async () => {
     try {
-      const res = await api.getMe();
-      if (res && res.user) {
-        setUser(res.user);
-      } else {
-        setUser(null);
-        setStoredToken(null);
+      const res = await fetch('/api/auth/session', { cache: 'no-store' });
+      if (res.ok) {
+        let data: any = null;
+        try {
+          data = await res.json();
+        } catch {
+          data = null;
+        }
+        if (data && data.authenticated && data.user) {
+          setUser(data.user);
+          setExpiresAt(data.expiresAt);
+          setTimeLeftMs(data.timeLeftMs || 0);
+          localStorage.setItem('tutorhq_user', JSON.stringify(data.user));
+          localStorage.setItem('tutorhq_expiresAt', String(data.expiresAt));
+          setIsLoading(false);
+          return;
+        }
       }
-    } catch (err: any) {
-      console.warn('Session restoration error:', err.message);
+      
+      // Fallback: Check localStorage if cookie exists or token stored
+      const storedUser = localStorage.getItem('tutorhq_user');
+      const storedExpires = localStorage.getItem('tutorhq_expiresAt');
+      if (storedUser && storedExpires) {
+        const exp = Number(storedExpires);
+        const remaining = exp - Date.now();
+        if (remaining > 0) {
+          setUser(JSON.parse(storedUser));
+          setExpiresAt(exp);
+          setTimeLeftMs(remaining);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Expired or missing
       setUser(null);
-      setStoredToken(null);
+      setExpiresAt(null);
+      setTimeLeftMs(0);
+      localStorage.removeItem('tutorhq_user');
+      localStorage.removeItem('tutorhq_expiresAt');
+    } catch (err) {
+      // Silently fallback to local state without logging noisy fetch errors during server initialization
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    // Check initial session
-    refreshUser();
-  }, [refreshUser]);
+    checkSession();
+  }, [checkSession]);
 
-  const login = async (
-    emailOrRoll: string,
-    password: string
-  ): Promise<{ success: boolean; isPending?: boolean; error?: string }> => {
-    try {
-      setPendingNotice(null);
-      setStoredToken(null);
-      setUser(null);
-      const res = await api.login(emailOrRoll, password);
-      if (res.success && res.token && res.user) {
-        setStoredToken(res.token);
-        setUser(res.user);
-        return { success: true };
+  // Live session countdown timer & auto-logout when 3h expires
+  useEffect(() => {
+    if (!expiresAt) return;
+
+    const interval = setInterval(() => {
+      const remaining = expiresAt - Date.now();
+      if (remaining <= 0) {
+        setTimeLeftMs(0);
+        setUser(null);
+        setExpiresAt(null);
+        localStorage.removeItem('tutorhq_user');
+        localStorage.removeItem('tutorhq_expiresAt');
+        clearInterval(interval);
+      } else {
+        setTimeLeftMs(remaining);
       }
-      return { success: false, error: 'Authentication failed. Please verify credentials.' };
-    } catch (err: any) {
-      const isPending =
-        err?.data?.approval === 'pending' ||
-        (typeof err?.data?.error === 'string' && err.data.error.toLowerCase().includes('pending')) ||
-        (typeof err?.message === 'string' && err.message.toLowerCase().includes('pending'));
+    }, 1000);
 
-      if (isPending) {
-        const friendlyMessage =
-          err.data?.error ||
-          'Your student account registration has been submitted and is currently pending verification by your Class Captain or Academic Administrator.';
-        setPendingNotice({
-          message: friendlyMessage,
-          user: err.data?.user,
-          submittedAt: new Date().toISOString(),
-        });
-        return {
-          success: false,
-          isPending: true,
-          error: friendlyMessage,
+    return () => clearInterval(interval);
+  }, [expiresAt]);
+
+  const login = async (identifier: string, pass: string) => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, sid: identifier, email: identifier, password: pass }),
+      });
+
+      const resText = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(resText);
+      } catch (jsonErr) {
+        return { 
+          success: false, 
+          error: 'Unable to connect to authentication server. Please try again in a few moments.' 
         };
       }
-      return { success: false, error: err.message || 'Login failed' };
-    }
-  };
 
-  const quickLogin = async (role?: UserRole, email?: string) => {
-    try {
-      setLoading(true);
-      setPendingNotice(null);
-      setStoredToken(null);
-      setUser(null);
-      const res = await api.quickLogin(role, email);
-      if (res.success && res.token && res.user) {
-        setStoredToken(res.token);
-        setUser(res.user);
+      if (!res.ok || !data.success) {
+        const errText = data?.error || 'Invalid credentials or account pending approval.';
+        return { success: false, error: errText };
       }
-    } catch (err: any) {
-      console.error('Quick login failed:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const registerStudent = async (formData: any): Promise<{ success: boolean; message?: string; error?: string }> => {
-    try {
-      const res = await api.register(formData);
-      if (res.success) {
-        setPendingNotice({
-          message: res.message,
-          user: {
-            fullName: formData.fullName,
-            rollNumber: formData.rollNumber,
-            batch: formData.batch,
-            section: formData.section,
-          },
-        });
-        return { success: true, message: res.message };
+      setUser(data.user);
+      setExpiresAt(data.expiresAt);
+      setTimeLeftMs(data.expiresAt - Date.now());
+      localStorage.setItem('tutorhq_user', JSON.stringify(data.user));
+      localStorage.setItem('tutorhq_expiresAt', String(data.expiresAt));
+      if (data.token) {
+        localStorage.setItem('tutorhq_token', data.token);
       }
-      return { success: false, error: 'Registration failed' };
+
+      return { success: true };
     } catch (err: any) {
-      return { success: false, error: err.message || 'Registration failed' };
+      const rawMsg = err?.message || '';
+      if (rawMsg.toLowerCase().includes('json') || rawMsg.toLowerCase().includes('unexpected token') || rawMsg.toLowerCase().includes('fetch')) {
+        return { success: false, error: 'Unable to connect to authentication server. Please try again later.' };
+      }
+      return { success: false, error: rawMsg || 'Connection failed. Please try again.' };
     }
   };
 
   const logout = async () => {
     try {
-      await api.logout();
-    } catch {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (e) {
       // ignore
     } finally {
-      setStoredToken(null);
       setUser(null);
-      setPendingNotice(null);
+      setExpiresAt(null);
+      setTimeLeftMs(0);
+      localStorage.removeItem('tutorhq_user');
+      localStorage.removeItem('tutorhq_expiresAt');
+      localStorage.removeItem('tutorhq_token');
     }
   };
-
-  const clearPendingNotice = () => setPendingNotice(null);
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        loading,
+        isAuthenticated: !!user,
+        isLoading,
+        expiresAt,
+        timeLeftMs,
         login,
-        quickLogin,
-        registerStudent,
         logout,
-        refreshUser,
-        pendingNotice,
-        clearPendingNotice,
+        checkSession,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export function useAuth() {
   const context = useContext(AuthContext);
@@ -181,4 +184,45 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+}
+
+export { LoginForm };
+
+/* ==========================================
+   AUTH GUARD WRAPPER
+   ========================================== */
+export function AuthGuard({ children }: { children: React.ReactNode }) {
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || isLoading) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-3">
+        <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+        <p className="text-xs font-bold text-slate-500 font-mono">Verifying Session Authorization...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginForm />;
+  }
+
+  // 1. Student View logic
+  if (user?.userType === 'student') {
+    // If account pending approval
+    if (user.isApproved !== 'yes') {
+      return <PendingApprovalCard user={user} />;
+    }
+
+    // Approved student view
+    return <StudentPortalView />;
+  }
+
+  // 2. Admin View logic (userType === 'admin')
+  return <>{children}</>;
 }
